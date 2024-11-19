@@ -7,7 +7,7 @@ RESOURCE_FILES = src/resources/resource.rc src/resources/resource.h
 
 OBJECTS = main.o selection.o resource.res
 
-SEPARATOR = @echo +-------------------------------------------------------------------------------------------------------+
+SEPARATOR = @echo -----------------
 .PHONY = clean_obj clean_all build_clean
 
 build_clean: build clean_obj
