@@ -3,4 +3,4 @@ use_rows: 0
 max_options: 2
 max_columns: 2
 max_rows: 1
-max_line_length: 2048
+max_line_length: 20

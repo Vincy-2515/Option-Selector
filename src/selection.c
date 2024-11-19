@@ -7,8 +7,8 @@
 
 //IMPOSTAZIONI (modificabili solo da "getSettings()"):
 struct Settings {
-    bool use_columns; //"true" se le opzioni vanno solo nella prima riga
-    bool use_rows; //"true" se le opzioni vanno solo nella prima colonna
+    int use_columns; //"true" se le opzioni vanno solo nella prima riga
+    int use_rows; //"true" se le opzioni vanno solo nella prima colonna
     int max_options; //numero delle opzioni
     int max_columns; //numero delle colonne
     int max_rows; //numero delle righe
@@ -17,7 +17,9 @@ struct Settings {
     //percorso dei file di impostazioni
     char strings_filename[200];
     char settings_filename[200];
-} settings;
+};
+
+struct Settings settings;
 
 //TASTI:
 #define KEY_W 'w'
@@ -27,7 +29,7 @@ struct Settings {
 #define ENTER '\r'
 
 //ESCAPE CODES:
-#define DELETE_FROM_CURSOR_TO_ENDSCREEN "\x1B[0J" //cancella dalla posizione del cursore fino alla fine della finestra
+#define ERASE_FROM_CURSOR_TO_ENDSCREEN "\x1B[0J" //cancella dalla posizione del cursore fino alla fine della finestra
 #define INVERT_COLORS_TRUE "\x1B[7m" //inverte colori carattere: true
 #define INVERT_COLORS_FALSE "\x1B[27m" //inverte colori carattere: false
 
@@ -66,7 +68,7 @@ int initializeSelection(int requested_option_list){
 
             case KEY_A:
                 x--;
-                break; 
+                break;
 
             case KEY_S:
                 y++;
@@ -83,6 +85,7 @@ int initializeSelection(int requested_option_list){
         checkGridLimitOverflow (&x, &y);
 
         selected_option = verifySelectedOptionCoords(x, y);
+        if (selected_option < 0) return selected_option;
 
     }while(key_input!=ENTER);
 
@@ -94,12 +97,13 @@ void getSettings(int list_choice){
 
     switch(list_choice){
         case 1:
-            strcpy(settings.settings_filename, "resources/selection_one/optiffons_settings.txt");
-            strcpy(settings.strings_filename, "resources/selection_one/options_strings.txt");
+        
+            strcpy(settings.settings_filename, "src/resources/selection_one/options_settings.txt");
+            strcpy(settings.strings_filename, "src/resources/selection_one/options_strings.txt");
             break;
         case 2:
-            strcpy(settings.settings_filename, "resources/selection_two/options_settings.txt");
-            strcpy(settings.strings_filename, "resources/selection_two/options_strings.txt");
+            strcpy(settings.settings_filename, "src/resources/selection_two/options_settings.txt");
+            strcpy(settings.strings_filename, "src/resources/selection_two/options_strings.txt");
             break;
     }
 
@@ -180,10 +184,10 @@ void checkGridLimitOverflow (int* p_x, int* p_y){
 
 void printOptionsStrings(int selected_option){
     //elimino le opzioni stampate precedentemente
-    printf("\x1b[%d;%dH", 8, 0);
-    printf("%s", DELETE_FROM_CURSOR_TO_ENDSCREEN);
+    printf("\x1b[%d;%dH", 0, 0);
+    printf("%s", ERASE_FROM_CURSOR_TO_ENDSCREEN);
     
-    char **options_strings = getStrings();
+    char **options_strings = getStrings(); //contiene \r\r\r\r\r\r\r\r\r\r\r\r RISOLVERE
 
     if (settings.use_columns == true && settings.use_rows == false) {
         printOnOnlyColumnsGrid(options_strings, selected_option);
@@ -246,30 +250,32 @@ char **getStrings(){
     char **options_strings;
 
     options_strings = malloc(sizeof(char*) * settings.max_options);
-    for (i=0; i<settings.max_options; i++) {
+    for (i=0; i == settings.max_options; i++) {
         options_strings[i] = malloc(sizeof(char) * settings.max_line_length);
     }
     
-    file = fopen(settings.strings_filename, "r"); //apro l'accesso al file
+    file = fopen(settings.strings_filename, "r");
 
-        //stampo a schermo un eventuale errore nell' apertura del file
-        if(file == NULL) perror("[ERRORE]");
+    if(file == NULL) perror("[ERRORE]");
+    
+    i=0;
+    while(!feof(file) && !ferror(file)){
+        //sposto la riga di testo nel vettore "string" solo se non ritorna NULL
+        if (fgets(string, settings.max_line_length, file) != NULL) i++;
 
-
-        while(!feof(file) && !ferror(file)){
-
-            //sposto temporaneamente la riga di testo nel vettore "string" solo se non ritorna NULL
-            if (fgets(string, settings.max_line_length, file) != NULL) i++;
-
-        //scambio il "\n" alla fine della riga con "\0" (\0: codice ASCII di fine stringa)
-            size_t len = strlen(string);
-            if (len > 0 && string[len - 1] == '\n') {
-                string[len - 1] = '\0';
-            }
-        //---
-
-            strcpy(options_strings[i-1], string); //conservo la stringa in nel vettore "optionStrings"
+        //scambio il "\n" alla fine della riga con "\0"
+        size_t len = strlen(string);
+        if (len > 0 && string[len - 1] == '\n') {
+            string[len - 1] = '\0';
         }
+
+        if (i < settings.max_options) {
+            strcpy(options_strings[i-1], string);
+        } 
+        else {
+            break;
+        }
+    }
 
     fclose(file); //chiudo l'accesso al file
 
