@@ -226,7 +226,7 @@ void printOnOnlyRowsGrid (char **options_strings, int selected_option){
 
 void printOnGrid (char **options_strings, int selected_option){
     int j;
-    int count;
+    int count = 0;
     for(j=0; j<settings.max_options; j++){
         for(j=0; count<settings.max_options && j<settings.max_columns; j++){
             printf("     ");
@@ -250,7 +250,7 @@ char **getStrings(){
     char **options_strings;
 
     options_strings = malloc(sizeof(char*) * settings.max_options);
-    for (i=0; i == settings.max_options; i++) {
+    for (i=0; i < settings.max_options; i++) {
         options_strings[i] = malloc(sizeof(char) * settings.max_line_length);
     }
     
@@ -259,23 +259,21 @@ char **getStrings(){
     if(file == NULL) perror("[ERRORE]");
     
     i=0;
-    while(!feof(file) && !ferror(file)){
-        //sposto la riga di testo nel vettore "string" solo se non ritorna NULL
-        if (fgets(string, settings.max_line_length, file) != NULL) i++;
-
-        //scambio il "\n" alla fine della riga con "\0"
+    while (fgets(string, settings.max_line_length, file) != NULL) {
+        // Scambio il "\n" alla fine della riga con "\0"
         size_t len = strlen(string);
         if (len > 0 && string[len - 1] == '\n') {
             string[len - 1] = '\0';
         }
 
         if (i < settings.max_options) {
-            strcpy(options_strings[i-1], string);
-        } 
-        else {
+            strcpy(options_strings[i], string);
+            i++;
+        } else {
             break;
         }
     }
+
 
     fclose(file); //chiudo l'accesso al file
 
