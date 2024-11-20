@@ -33,18 +33,20 @@ int main () {
 void checkOption (int option) {
 /*     printf("%s", MOVE_CUROSOR_TO_HOME);
     printf("%s", ERASE_SCREEN); */
+
+    printf("\n\n");
     
     if (option == -1) {
-        printf("\n[ERRORE]: tasto premuto non valido");
+        printf("[ERRORE]: tasto premuto non valido");
     } 
     else if (option == -2) {
-        printf("\n[ERRORE]: coordinate non valide");
+        printf("[ERRORE]: coordinate non valide");
     }
     else {
-        printf("\n[ERRORE]: non definito");
+        printf("[ERRORE]: non definito");
     }
 
-    printf("\noption: %d", option);
-    printf("\nPREMI [INVIO] PER PROSEGUIRE:");
+    printf(" (codice errore: %d)", option);
+    printf("\n\nPREMI [INVIO] PER PROSEGUIRE:");
     getchar();
 }
