@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -fdiagnostics-color=always -g -pedantic -Wall -Wextra -Werror
+CFLAGS = -g -pedantic -Wall -Wextra -Werror -fdiagnostics-color=always
 
 MAIN_FILE = main.c
 SELECTION_FILES = src/selection.h src/selection.c
