@@ -29,7 +29,7 @@ int main () {
     option2 = initializeSelection(2);
     if (option2 < 0) checkOption(option1);
 
-    printf("\nPREMI [INVIO] PER CHIUDERE:");
+    printf("\n\n-- PREMERE [INVIO] PER CHIUDERE --");
     getchar();
 
     printf("%s", ERASE_SCREEN);
@@ -41,22 +41,23 @@ int main () {
 }
 
 void checkOption (int option) {
-/*     printf("%s", MOVE_CUROSOR_TO_HOME);
-    printf("%s", ERASE_SCREEN); */
+    printf("%s", MOVE_CUROSOR_TO_HOME);
+    printf("%s", ERASE_SCREEN);
 
-    printf("\n\n");
+    printf("\n");
     
     if (option == -1) {
-        printf("[ERRORE]: tasto premuto non valido");
+        printf("%s[ERRORE]: tasto premuto non valido", TEXT_COLOR_RED);
     } 
     else if (option == -2) {
-        printf("[ERRORE]: coordinate non valide");
+        printf("%s[ERRORE]: coordinate non valide", TEXT_COLOR_RED);
     }
     else {
-        printf("[ERRORE]: non definito");
+        printf("%s[ERRORE]: non definito", TEXT_COLOR_RED);
     }
 
-    printf(" (codice errore: %d)", option);
-    printf("\n\nPREMI [INVIO] PER PROSEGUIRE:");
+    printf(" (codice errore: %d)%s", option, TEXT_COLOR_RESET);
+
+    printf("\n\n-- PREMERE [INVIO] PER PROSEGUIRE --");
     getchar();
 }
