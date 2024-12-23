@@ -43,7 +43,7 @@ void printOnOnlyColumnsGrid (char **options_strings, int selected_option);
 void printOnOnlyRowsGrid (char **options_strings, int selected_option);
 void printOnGrid (char **options_strings, int selected_option);
 char **getStrings();
-void coord_generator(int options_coords[]);
+void coordGenerator(int options_coords[]);
 
 int initializeSelection(int requested_option_list){
     char key_input;
@@ -127,7 +127,7 @@ int verifySelectedOptionCoords(int x, int y){
     int selected_option;
     int converted_y;
     int converted_x;
-    int cursor_pos;
+    int cursor_position;
 
     /*
      * tramite la funzione coord_generator() avviene la generazione 
@@ -136,24 +136,23 @@ int verifySelectedOptionCoords(int x, int y){
      * in una singola posizione del vettore nel segente modo:
      * options_coords[n] = yyy.xxx;
      */
-    coord_generator(options_coords);
+    coordGenerator(options_coords);
 
     //conversione delle coordinate di posizione del cursore nel formato yyy.xxx
     converted_y = y*1000;
     converted_x = x*1;
-    cursor_pos = converted_x + converted_y;
+    cursor_position = converted_x + converted_y;
 
     //confronto della posizione del cursore rispetto a quella delle opzioni
-    for(selected_option=0; selected_option < settings.max_options - 1; selected_option++){
-        if(cursor_pos == options_coords[selected_option]) return selected_option;
+    for(selected_option=0; selected_option < settings.max_options; selected_option++){
+        if(cursor_position == options_coords[selected_option]) return selected_option;
     }
 
     return -2;
 }
 
-void checkGridLimitOverflow (int* p_x, int* p_y){
-    int x = *p_x;
-    int y = *p_y;
+void checkGridLimitOverflow (int* x, int* y){
+
     /*
      * nella parte del codice che segue imposto
      * x e y diversamente se i loro valori
@@ -161,24 +160,32 @@ void checkGridLimitOverflow (int* p_x, int* p_y){
      * che contiene le opzioni
      */
     if(settings.use_columns == true && settings.use_rows == true){
-        if(x > settings.max_columns-1) {x=0; y++;}
-        if(x < 0) {x=settings.max_columns-1; y--;}
-        if(y > settings.max_rows-1) {y=0; x=0;}
-        if(y < 0) {y=settings.max_rows-1; x=0;}
+        if((*x < 0 && *y == 0) || (*x == 0 && *y < 0)) {*x=settings.max_columns-1; *y=settings.max_rows-1;}
+        
+        if(*y < 0 && *x != 0) {(*x)--; *y = 0;}
+        if(*y > settings.max_rows-1 && *x != settings.max_columns-1) {(*x)++; *y = settings.max_rows-1;}
+
+        if(*x > settings.max_columns-1) {*x=0; (*y)++;}
+        if(*x < 0) {*x=settings.max_columns-1; (*y)--;}
+
+        if(*y > settings.max_rows-1) {*y=0; *x=0;}
+        if(*y < 0) {*y = settings.max_rows-1; *x=0;}
     }
 
     if(settings.use_columns == true && settings.use_rows == false){
-        if(y < 0){y=0; x++;}
-        if(y > 0){y=0; x--;}
-        if(x < 0) x=settings.max_columns-1;
-        if(x > settings.max_columns-1) x=0;
+        if(*x < 0) *x=settings.max_columns-1;
+        if(*x > settings.max_columns-1) *x=0;
+
+        if(*y < 0){*y=0; (*x)++;}
+        if(*y > 0){*y=0; (*x)--;}
     }
 
     if(settings.use_columns == false && settings.use_rows == true){
-        if(x < 0){x=0; y--;}
-        if(x > 0){x=0; y++;}
-        if(y < 0) y=settings.max_rows-1;
-        if(y > settings.max_rows-1) y=0;
+        if(*x < 0){*x=0; (*y)--;}
+        if(*x > 0){*x=0; (*y)++;}
+
+        if(*y < 0) *y=settings.max_rows-1;
+        if(*y > settings.max_rows-1) *y=0;
     }
 }
 
@@ -187,7 +194,7 @@ void printOptionsStrings(int selected_option){
     printf("\x1b[%d;%dH", 0, 0);
     printf("%s", ERASE_FROM_CURSOR_TO_ENDSCREEN);
     
-    char **options_strings = getStrings(); //contiene \r\r\r\r\r\r\r\r\r\r\r\r RISOLVERE
+    char **options_strings = getStrings();
 
     if (settings.use_columns == true && settings.use_rows == false) {
         printOnOnlyColumnsGrid(options_strings, selected_option);
@@ -225,22 +232,22 @@ void printOnOnlyRowsGrid (char **options_strings, int selected_option){
 }
 
 void printOnGrid (char **options_strings, int selected_option){
+    int i;
     int j;
-    int count = 0;
-    for(j=0; j<settings.max_options; j++){
-        for(j=0; count<settings.max_options && j<settings.max_columns; j++){
+    int current_option = 0;
+    for(i=0; i<settings.max_rows; i++){
+        for(j=0; j<settings.max_columns; j++){
             printf("     ");
-            if(count == selected_option) {
-                printf(">> %s%s%s", INVERT_COLORS_TRUE, options_strings[selected_option], INVERT_COLORS_FALSE);
+            if(current_option == selected_option) {
+                printf(">> %s%s%s", INVERT_COLORS_TRUE, options_strings[current_option], INVERT_COLORS_FALSE);
             }
             else {
-                printf("-- %s", options_strings[count]);
+                printf("-- %s", options_strings[current_option]);
             }
-            count++;
+            current_option++;
         }
         printf("\n");
     }
-    count = 0;
 }
 
 char **getStrings(){
@@ -280,8 +287,8 @@ char **getStrings(){
     return options_strings;
 }
 
-void coord_generator(int options_coords[]){
-    int x, y, option=0;
+void coordGenerator(int options_coords[]){
+    int x = 0, y = 0, option = 0;
 
     for(y=0; y<settings.max_rows; y++){
         for(x=0; x<settings.max_columns; x++){
