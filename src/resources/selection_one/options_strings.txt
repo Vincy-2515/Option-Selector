@@ -1,9 +1,9 @@
-Opzione 1 
-Opzione 2 
-Opzione 3 
-Opzione 4 
-Opzione 5 
-Opzione 6 
-Opzione 7 
+Opzione 1
+Opzione 2
+Opzione 3
+Opzione 4
+Opzione 5
+Opzione 6
+Opzione 7
 Opzione 8
 Opzione 9
