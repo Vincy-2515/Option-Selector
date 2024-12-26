@@ -29,6 +29,10 @@ int main () {
     option2 = initializeSelection(2);
     if (option2 < 0) checkOption(option1);
 
+    printf("\n\nOPZIONI SELEZIONATE:");
+    printf("\n >> prima selezione: %d", option1+1);
+    printf("\n >> seconda selezione: %d", option2+1);
+
     printf("\n\n-- PREMERE [INVIO] PER CHIUDERE --");
     getchar();
 
