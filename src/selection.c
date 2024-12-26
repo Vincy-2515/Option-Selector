@@ -36,38 +36,45 @@ struct Settings settings;
 #define INVERT_COLORS_FALSE "\x1B[27m"
 
 //DICHIARAZIONE FUNZIONI:
-int initializeSelection(int requested_option_list);
-void getSettings(int list_choice);
+int initializeSelection (int requested_option_list);
+void getSettings (int list_choice);
 
-int verifySelectedOptionCoords(int x, int y);
-void checkGridLimitOverflow (int *x, int *y);
-void coordGenerator(int options_coords[]);
-
-char **getStrings(char **options_strings);
-void printOptionsStrings(char **options_strings, int selected_option);
+int getStrings (char **options_strings);
+int printOptionsStrings (char **options_strings, int selected_option);
 void printOnOnlyColumnsGrid (char **options_strings, int selected_option);
 void printOnOnlyRowsGrid (char **options_strings, int selected_option);
 void printOnGrid (char **options_strings, int selected_option);
 
-int initializeSelection(int requested_option_list){
+void checkGridLimitOverflow (int *x, int *y);
+int verifySelectedOptionCoords (int *options_coords, int x, int y);
+void coordGenerator (int *options_coords);
+
+int initializeSelection (int requested_option_list) {
+    int error_code = 0;
     char key_input;
     int i = 0;
     int x = 0; 
     int y = 0;
     int selected_option = 0;
-
     char **options_strings;
+    int *options_coords;
 
     getSettings (requested_option_list);
-    
+
     options_strings = malloc(sizeof(char*) * settings.max_options);
+    options_coords = malloc (sizeof(int) * settings.max_options);
 
     for (i = 0; i < settings.max_options; i++) {
-        options_strings[i] = malloc(sizeof(char) * settings.max_line_length);
+        options_strings[i] = malloc (sizeof(char) * settings.max_line_length);
     }
 
     do{
-        printOptionsStrings(options_strings, selected_option);
+        error_code = printOptionsStrings(options_strings, selected_option);
+
+        if (error_code != 0) {
+            selected_option = error_code;
+            break;
+        }
 
         key_input = _getch();
 
@@ -92,26 +99,31 @@ int initializeSelection(int requested_option_list){
                 break;
 
             default:
-                return -1;
+                return -3;
         }
 
         checkGridLimitOverflow (&x, &y);
 
-        selected_option = verifySelectedOptionCoords(x, y);
+        selected_option = verifySelectedOptionCoords(options_coords, x, y);
+
         if (selected_option < 0) {
             return selected_option;
         }
 
     }while(key_input != ENTER);
 
-    //#########################################################################################
-    //################################ LIBERARE LE VARIABILI ##################################
-    //#########################################################################################
 
+    for (i = 0; i < settings.max_options; i++) {
+        free(options_strings[i]);
+    }
+    
+    free(options_coords);
+    free(options_strings);
+    
     return selected_option;
 }
 
-void getSettings(int list_choice){
+void getSettings (int list_choice) {
     FILE *file;
 
     switch(list_choice){
@@ -145,12 +157,17 @@ void getSettings(int list_choice){
     //---
 }
 
-void printOptionsStrings(char **options_strings, int selected_option){
+int printOptionsStrings (char **options_strings, int selected_option) {
+    int error_code;
     //eliminazione delle opzioni stampate precedentemente
     printf("\x1b[%d;%dH", 0, 0);
     printf("%s", ERASE_FROM_CURSOR_TO_ENDSCREEN);
     
-    getStrings(options_strings);
+    error_code = getStrings(options_strings);
+
+    if (error_code != 0) {
+        return error_code;
+    }
 
     if (settings.use_columns == TRUE && settings.use_rows == FALSE) {
         printOnOnlyColumnsGrid(options_strings, selected_option);
@@ -162,11 +179,13 @@ void printOptionsStrings(char **options_strings, int selected_option){
         printOnGrid(options_strings, selected_option);
     }
     else {
-        printf("[ERRORE]: Combinazione di impostazioni incorretta");
+        return -2;
     }
+
+    return 0;
 }
 
-char **getStrings(char **options_strings){
+int getStrings (char **options_strings) {
     int i = 0;
     FILE *file;
     char string[settings.max_line_length];
@@ -174,9 +193,9 @@ char **getStrings(char **options_strings){
     file = fopen(settings.strings_filename, "r");
 
     if (file == NULL){
-        perror("[ERRORE]: file non esistente");
+        return -1;
     }
-    
+
     i = 0;
     while (fgets(string, settings.max_line_length, file) != NULL) {
         size_t length = strlen(string);
@@ -196,11 +215,10 @@ char **getStrings(char **options_strings){
     }
 
     fclose(file);
-
-    return options_strings;
+    return 0;
 }
 
-void printOnOnlyColumnsGrid (char **options_strings, int selected_option){
+void printOnOnlyColumnsGrid (char **options_strings, int selected_option) {
     int j;
 
     for(j=0; j<settings.max_columns; j++){
@@ -215,7 +233,7 @@ void printOnOnlyColumnsGrid (char **options_strings, int selected_option){
     }
 }
 
-void printOnOnlyRowsGrid (char **options_strings, int selected_option){
+void printOnOnlyRowsGrid (char **options_strings, int selected_option) {
     int j;
 
     for(j=0; j<settings.max_rows; j++){
@@ -230,7 +248,7 @@ void printOnOnlyRowsGrid (char **options_strings, int selected_option){
     }
 }
 
-void printOnGrid (char **options_strings, int selected_option){
+void printOnGrid (char **options_strings, int selected_option) {
     int i;
     int j;
     int current_option = 0;
@@ -254,7 +272,7 @@ void printOnGrid (char **options_strings, int selected_option){
     }
 }
 
-void checkGridLimitOverflow (int *x, int *y){
+void checkGridLimitOverflow (int *x, int *y) {
     //#########################################################################################
     //################################ PIU LEGGIBILE ##################################
     //#########################################################################################
@@ -294,8 +312,7 @@ void checkGridLimitOverflow (int *x, int *y){
     }
 }
 
-int verifySelectedOptionCoords(int x, int y){
-    int options_coords[settings.max_options];
+int verifySelectedOptionCoords(int *options_coords, int x, int y){
     int selected_option;
     int converted_y;
     int converted_x;
@@ -322,10 +339,10 @@ int verifySelectedOptionCoords(int x, int y){
         }
     }
 
-    return -2;
+    return -4;
 }
 
-void coordGenerator(int options_coords[]){
+void coordGenerator(int *options_coords){
     int x = 0, y = 0, option = 0;
 
     for (y = 0; y < settings.max_rows; y++) {
