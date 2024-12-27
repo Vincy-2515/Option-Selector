@@ -4,23 +4,9 @@
 #include <string.h>
 #include <conio.h>
 
-//IMPOSTAZIONI (modificabili solo da "getSettings()"):
-typedef struct {
-    int use_columns;
-    int use_rows;
-    int max_options;
-    int max_columns;
-    int max_rows;
-    int max_line_length;
-
-    //percorso dei file di impostazioni
-    char strings_filename[200];
-} Settings;
-
 #define TRUE 1
 #define FALSE 0
 
-//TASTI:
 #define KEY_W 'w'
 #define KEY_A 'a'
 #define KEY_S 's'
@@ -32,19 +18,30 @@ typedef struct {
 #define INVERT_COLORS_TRUE "\x1B[7m"
 #define INVERT_COLORS_FALSE "\x1B[27m"
 
-//DICHIARAZIONE FUNZIONI:
-int initializeSelection (Settings settings);
-//static void checkSettings (Settings settings);
+//IMPOSTAZIONI (modificabili solo da "setSettings()"):
+typedef struct {
+    int use_columns;
+    int use_rows;
+    int max_options;
+    int max_columns;
+    int max_rows;
+    int max_option_string_length;
+    char *path;
+} Settings;
+
+int initializeSelection (int use_columns, int use_rows, int max_options, int max_columns, int max_rows, int max_option_string_length, char *path);
+static void setSettings (Settings *p_settings,int use_columns, int use_rows, int max_options, int max_columns, int max_rows, int max_option_string_length, char *path);
+static int checkSettings (Settings settings);
 static int printOptionsStrings (Settings settings, char **options_strings, int selected_option);
 static int getStrings (Settings settings, char **options_strings);
 static void printOnOnlyColumnsGrid (Settings settings, char **options_strings, int selected_option);
 static void printOnOnlyRowsGrid (Settings settings, char **options_strings, int selected_option);
 static void printOnGrid (Settings settings, char **options_strings, int selected_option);
-static void checkGridLimitOverflow (Settings settings, int *x, int *y);
+static void checkGridLimitOverflow (Settings settings, int *p_x, int *p_y);
 static int verifySelectedOptionCoords (Settings settings, int *options_coords, int x, int y);
 static void coordGenerator (Settings settings, int *options_coords);
 
-int initializeSelection (Settings settings) {
+int initializeSelection (int use_columns, int use_rows, int max_options, int max_columns, int max_rows, int max_option_string_length, char *path) {
     int error_code = 0;
     char key_input;
     int i = 0;
@@ -54,13 +51,20 @@ int initializeSelection (Settings settings) {
     char **options_strings;
     int *options_coords;
 
-    //checkSettings(settings);
+    Settings settings;
+    setSettings(&settings, use_columns, use_rows, max_options, max_columns, max_rows, max_option_string_length, path);
+
+    error_code = checkSettings(settings);
+    if (error_code != 0) {
+        free(settings.path);
+        return error_code;
+    }
 
     options_strings = malloc(sizeof(char*) * settings.max_options);
     options_coords = malloc (sizeof(int) * settings.max_options);
 
     for (i = 0; i < settings.max_options; i++) {
-        options_strings[i] = malloc (sizeof(char) * settings.max_line_length);
+        options_strings[i] = malloc (sizeof(char) * settings.max_option_string_length);
     }
 
     do{
@@ -76,25 +80,20 @@ int initializeSelection (Settings settings) {
         switch (key_input){
             case ENTER:
                 break;
-
             case KEY_W:
                 y--;
                 break;
-
             case KEY_A:
                 x--;
                 break;
-
             case KEY_S:
                 y++;
                 break;
-
             case KEY_D:
                 x++;
                 break;
-
             default:
-                return -3;
+                return -6; //#####################################################
         }
 
         checkGridLimitOverflow (settings, &x, &y);
@@ -112,17 +111,52 @@ int initializeSelection (Settings settings) {
         free(options_strings[i]);
     }
     
+    free(settings.path);
     free(options_coords);
     free(options_strings);
     
     return selected_option;
 }
 
-//static void checkSettings (Settings settings) {
-    //#####################################################
-    //###### AGGIUNGERE CONTROLLO DELLE IMPOSTAZIONI ######
-    //#####################################################
-//}
+static void setSettings (Settings *p_settings, int use_columns, int use_rows, int max_options, int max_columns, int max_rows, int max_option_string_length, char *path) {
+    Settings settings = *p_settings;
+    
+    settings.use_columns = use_columns;
+    settings.use_rows = use_rows;
+    settings.max_options = max_options;
+    settings.max_columns = max_columns;
+    settings.max_rows = max_rows;
+    settings.max_option_string_length = max_option_string_length;
+    
+    settings.path = malloc(strlen(path)+1);
+    strcpy(settings.path, path);
+
+    *p_settings = settings;
+}
+
+static int checkSettings (Settings settings) {
+    FILE *file;
+    file = fopen(settings.path, "r");
+    fclose(file);
+    
+    if (file == NULL) {
+        return -1;
+    }
+    else if (settings.use_columns == FALSE && settings.use_rows == FALSE ) {
+        return -2;
+    }
+    else if (settings.max_options < 2) {
+        return -3;
+    }
+    else if (settings.max_columns == 0 || settings.max_rows == 0) {
+        return -4;
+    }
+    else if ((settings.max_columns * settings.max_rows) < settings.max_options) {
+        return -5;
+    }
+
+    return 0;
+}
 
 static int printOptionsStrings (Settings settings, char **options_strings, int selected_option) {
     int error_code;
@@ -154,16 +188,16 @@ static int printOptionsStrings (Settings settings, char **options_strings, int s
 static int getStrings (Settings settings, char **options_strings) {
     int i = 0;
     FILE *file;
-    char string[settings.max_line_length];
+    char string[settings.max_option_string_length];
 
-    file = fopen(settings.strings_filename, "r");
+    file = fopen(settings.path, "r");
 
     if (file == NULL){
         return -1;
     }
 
     i = 0;
-    while (fgets(string, settings.max_line_length, file) != NULL) {
+    while (fgets(string, settings.max_option_string_length, file) != NULL) {
         size_t length = strlen(string);
 
         if (length > 0 && string[length - 1] == '\n') {
@@ -237,30 +271,36 @@ static void printOnGrid (Settings settings, char **options_strings, int selected
     }
 }
 
-static void checkGridLimitOverflow (Settings settings, int *x, int *y) {
+static void checkGridLimitOverflow (Settings settings, int *p_x, int *p_y) {
+    int x = *p_x;
+    int y = *p_y;
+
     if(settings.use_columns == TRUE && settings.use_rows == TRUE){
-        if((*x < 0 && *y == 0) || (*x == 0 && *y < 0)) {*x = settings.max_columns-1; *y = settings.max_rows-1;}
-        if(*y < 0 && *x != 0) {(*x)--; *y = 0;}
-        if(*y > settings.max_rows-1 && *x != settings.max_columns-1) {(*x)++; *y = settings.max_rows-1;}
-        if(*x > settings.max_columns-1) {*x = 0; (*y)++;}
-        if(*x < 0) {*x = settings.max_columns-1; (*y)--;}
-        if(*y > settings.max_rows-1) {*x = 0; *y = 0;}
-        if(*y < 0) {*x = 0; *y = settings.max_rows-1; }
+        if((x < 0 && y == 0) || (x == 0 && y < 0)) {x = settings.max_columns-1; y = settings.max_rows-1;}
+        if(y < 0 && x != 0) {x--; y = 0;}
+        if(y > settings.max_rows-1 && x != settings.max_columns-1) {x++; y = settings.max_rows-1;}
+        if(x > settings.max_columns-1) {x = 0; y++;}
+        if(x < 0) {x = settings.max_columns-1; y--;}
+        if(y > settings.max_rows-1) {x = 0; y = 0;}
+        if(y < 0) {x = 0; y = settings.max_rows-1; }
     }
 
     if(settings.use_columns == TRUE && settings.use_rows == FALSE){
-        if(*x < 0) *x = settings.max_columns-1;
-        if(*x > settings.max_columns-1) *x = 0;
-        if(*y < 0){(*x)++; *y = 0;}
-        if(*y > 0){(*x)--; *y = 0;}
+        if(x < 0) x = settings.max_columns-1;
+        if(x > settings.max_columns-1) x = 0;
+        if(y < 0){x++; y = 0;}
+        if(y > 0){x--; y = 0;}
     }
 
     if(settings.use_columns == FALSE && settings.use_rows == TRUE){
-        if(*x < 0){*x = 0; (*y)--;}
-        if(*x > 0){*x = 0; (*y)++;}
-        if(*y < 0) *y = settings.max_rows-1;
-        if(*y > settings.max_rows-1) *y = 0;
+        if(x < 0){x = 0; y--;}
+        if(x > 0){x = 0; y++;}
+        if(y < 0) y = settings.max_rows-1;
+        if(y > settings.max_rows-1) y = 0;
     }
+
+    *p_x = x;
+    *p_y = y;
 }
 
 static int verifySelectedOptionCoords(Settings settings, int *options_coords, int x, int y){
@@ -281,7 +321,7 @@ static int verifySelectedOptionCoords(Settings settings, int *options_coords, in
         }
     }
 
-    return -4;
+    return -7; //#####################################################
 }
 
 static void coordGenerator(Settings settings, int *options_coords){
