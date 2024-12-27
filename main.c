@@ -16,8 +16,7 @@
 #define TEXT_COLOR_YELLOW "\x1b[1;33m"
 #define TEXT_COLOR_RESET "\x1B[0;0m"
 
-int main()
-{
+int main(){
     printf("%s", CURSOR_VISIBILITY_FALSE);
     system("cls");
 
