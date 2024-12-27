@@ -58,10 +58,10 @@ void printError(int error_code)
         printf("%s[ERRORE]: numero di righe/colonne insufficienti per contenere le opzioni", TEXT_COLOR_RED);
         break;
     case -204:
-        printf("%s[ERRORE]: valori di 'use_columns'/'use_rows' errati accattati solo 1/0 (true/false)", TEXT_COLOR_RED);
+        printf("%s[ERRORE]: valori di 'use_columns'/'use_rows' errati, accattati solo 1/0 (true/false)", TEXT_COLOR_RED);
         break;
     case -205:
-        printf("%s[ERRORE]: 'use_columns'/'use_rows' disattivato quindi il numero di essi non puo' essere maggiore di 1 ", TEXT_COLOR_RED);
+        printf("%s[ERRORE]: 'use_columns'/'use_rows' disattivato, quindi il numero di esso non puo' essere maggiore di 1 ", TEXT_COLOR_RED);
         break;
     case -300:
         printf("%s[ERRORE]: tasto premuto non valido", TEXT_COLOR_RED);
