@@ -1,5 +1,5 @@
-#ifndef SELECTION_H    
-#define SELECTION_H    
+#ifndef SELECTION_H
+#define SELECTION_H
     int initializeSelection (int requested_option_list);
     void getSettings (int list_choice);
     int getStrings (char **options_strings);
