@@ -18,20 +18,38 @@
 void checkOption(int option);
 
 int main () {
+    printf("%s", CURSOR_VISIBILITY_FALSE);
+    system("cls");
+
     int option1;
     int option2;
     int return_value;
+    
+    Settings settings_selection_1;
+    settings_selection_1.use_columns = 1;
+    settings_selection_1.use_rows = 1;
+    settings_selection_1.max_options = 9;
+    settings_selection_1.max_columns = 3;
+    settings_selection_1.max_rows = 3;
+    settings_selection_1.max_line_length = 20;
+    strcpy(settings_selection_1.strings_filename, "src/resources/options_strings/selection_one.txt");
 
-    system("cls");
-    printf("%s", CURSOR_VISIBILITY_FALSE);
+    Settings settings_selection_2;
+    settings_selection_2.use_columns = 1;
+    settings_selection_2.use_rows = 0;
+    settings_selection_2.max_options = 2;
+    settings_selection_2.max_columns = 2;
+    settings_selection_2.max_rows = 1;
+    settings_selection_2.max_line_length = 20;
+    strcpy(settings_selection_2.strings_filename, "src/resources/options_strings/selection_two.txt");
 
-    option1 = initializeSelection(1);
+    option1 = initializeSelection(settings_selection_1);
     if (option1 < 0){
         checkOption(option1);
         return_value = 1;
     }
 
-    option2 = initializeSelection(2);
+    option2 = initializeSelection(settings_selection_2);
     if (option2 < 0){
         checkOption(option1);
         return_value = 1;
