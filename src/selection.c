@@ -53,7 +53,7 @@ int initializeSelection (int requested_option_list) {
     int error_code = 0;
     char key_input;
     int i = 0;
-    int x = 0; 
+    int x = 0;
     int y = 0;
     int selected_option = 0;
     char **options_strings;
