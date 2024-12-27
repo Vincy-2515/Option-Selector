@@ -12,14 +12,12 @@
 int checkOption(int error_code);
 void printError(int error_code);
 
-int checkOption(int error_code)
-{
+int checkOption(int error_code){
     printf("%s", MOVE_CUROSOR_TO_HOME);
     printf("%s", ERASE_SCREEN);
     int return_value = 0;
 
-    if (error_code < 0)
-    {
+    if (error_code < 0){
         return_value = 1;
         printError(error_code);
     }
@@ -27,8 +25,7 @@ int checkOption(int error_code)
     return return_value;
 }
 
-void printError(int error_code)
-{
+void printError(int error_code){
     /*
      * codice errore = da -100 a -199: problemi generici
      * codice errore = da -200 a -299: problemi relativi alle impostazioni
@@ -36,8 +33,7 @@ void printError(int error_code)
      * codice errore = da -400 a -499: problemi relativi ai file
      * codice errore = da -500 in poi: errori imprevisti
      */
-    switch (error_code)
-    {
+    switch (error_code){
 
     case -404:
         printf("%s[ERRORE]: file delle stringhe delle opzioni inesistente o percorso incorretto", TEXT_COLOR_RED);
