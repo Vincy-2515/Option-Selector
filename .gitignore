@@ -1,5 +1,4 @@
 .altro
-.vscode
 *.exe
 src/*.h.gch
 *.o
