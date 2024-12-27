@@ -159,7 +159,6 @@ void getSettings (int list_choice) {
 
 int printOptionsStrings (char **options_strings, int selected_option) {
     int error_code;
-    //eliminazione delle opzioni stampate precedentemente
     printf("\x1b[%d;%dH", 0, 0);
     printf("%s", ERASE_FROM_CURSOR_TO_ENDSCREEN);
     
@@ -200,7 +199,6 @@ int getStrings (char **options_strings) {
     while (fgets(string, settings.max_line_length, file) != NULL) {
         size_t length = strlen(string);
 
-        // Scambio il "\n" alla fine della riga con "\0"
         if (length > 0 && string[length - 1] == '\n') {
             string[length - 1] = '\0';
         }
@@ -273,42 +271,28 @@ void printOnGrid (char **options_strings, int selected_option) {
 }
 
 void checkGridLimitOverflow (int *x, int *y) {
-    //#########################################################################################
-    //################################ PIU LEGGIBILE ##################################
-    //#########################################################################################
-    /*
-     * nella parte del codice che segue imposto
-     * x e y diversamente se i loro valori
-     * eccedono i valori della pseudo-griglia
-     * che contiene le opzioni
-     */
     if(settings.use_columns == TRUE && settings.use_rows == TRUE){
-        if((*x < 0 && *y == 0) || (*x == 0 && *y < 0)) {*x=settings.max_columns-1; *y=settings.max_rows-1;}
-        
+        if((*x < 0 && *y == 0) || (*x == 0 && *y < 0)) {*x = settings.max_columns-1; *y = settings.max_rows-1;}
         if(*y < 0 && *x != 0) {(*x)--; *y = 0;}
         if(*y > settings.max_rows-1 && *x != settings.max_columns-1) {(*x)++; *y = settings.max_rows-1;}
-
-        if(*x > settings.max_columns-1) {*x=0; (*y)++;}
-        if(*x < 0) {*x=settings.max_columns-1; (*y)--;}
-
-        if(*y > settings.max_rows-1) {*y=0; *x=0;}
-        if(*y < 0) {*y = settings.max_rows-1; *x=0;}
+        if(*x > settings.max_columns-1) {*x = 0; (*y)++;}
+        if(*x < 0) {*x = settings.max_columns-1; (*y)--;}
+        if(*y > settings.max_rows-1) {*x = 0; *y = 0;}
+        if(*y < 0) {*x = 0; *y = settings.max_rows-1; }
     }
 
     if(settings.use_columns == TRUE && settings.use_rows == FALSE){
-        if(*x < 0) *x=settings.max_columns-1;
-        if(*x > settings.max_columns-1) *x=0;
-
-        if(*y < 0){*y=0; (*x)++;}
-        if(*y > 0){*y=0; (*x)--;}
+        if(*x < 0) *x = settings.max_columns-1;
+        if(*x > settings.max_columns-1) *x = 0;
+        if(*y < 0){(*x)++; *y = 0;}
+        if(*y > 0){(*x)--; *y = 0;}
     }
 
     if(settings.use_columns == FALSE && settings.use_rows == TRUE){
-        if(*x < 0){*x=0; (*y)--;}
-        if(*x > 0){*x=0; (*y)++;}
-
-        if(*y < 0) *y=settings.max_rows-1;
-        if(*y > settings.max_rows-1) *y=0;
+        if(*x < 0){*x = 0; (*y)--;}
+        if(*x > 0){*x = 0; (*y)++;}
+        if(*y < 0) *y = settings.max_rows-1;
+        if(*y > settings.max_rows-1) *y = 0;
     }
 }
 
@@ -318,21 +302,12 @@ int verifySelectedOptionCoords(int *options_coords, int x, int y){
     int converted_x;
     int cursor_position;
 
-    /*
-     * tramite la funzione coord_generator() avviene la generazione 
-     * delle coordinate rispettando la quantità di colonne e righe
-     * prestabilite nelle impostazioni la memorizzazione avviene 
-     * in una singola posizione del vettore nel segente modo:
-     * options_coords[n] = yyy.xxx;
-     */
     coordGenerator(options_coords);
 
-    //conversione delle coordinate di posizione del cursore nel formato yyy.xxx
     converted_y = y*1000;
     converted_x = x*1;
     cursor_position = converted_x + converted_y;
 
-    //confronto della posizione del cursore rispetto a quella delle opzioni
     for(selected_option=0; selected_option < settings.max_options; selected_option++){
         if (cursor_position == options_coords[selected_option]) {
             return selected_option;
@@ -348,6 +323,7 @@ void coordGenerator(int *options_coords){
     for (y = 0; y < settings.max_rows; y++) {
 
         for (x = 0; x < settings.max_columns; x++) {
+            // options_coords[n] = yyyxxx
             options_coords[option] = x + y*1000;
             option++;
         }
