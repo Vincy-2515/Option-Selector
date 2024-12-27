@@ -37,17 +37,17 @@ struct Settings settings;
 
 //DICHIARAZIONE FUNZIONI:
 int initializeSelection (int requested_option_list);
-void getSettings (int list_choice);
+static void getSettings (int list_choice);
 
-int getStrings (char **options_strings);
-int printOptionsStrings (char **options_strings, int selected_option);
-void printOnOnlyColumnsGrid (char **options_strings, int selected_option);
-void printOnOnlyRowsGrid (char **options_strings, int selected_option);
-void printOnGrid (char **options_strings, int selected_option);
+static int getStrings (char **options_strings);
+static int printOptionsStrings (char **options_strings, int selected_option);
+static void printOnOnlyColumnsGrid (char **options_strings, int selected_option);
+static void printOnOnlyRowsGrid (char **options_strings, int selected_option);
+static void printOnGrid (char **options_strings, int selected_option);
 
-void checkGridLimitOverflow (int *x, int *y);
-int verifySelectedOptionCoords (int *options_coords, int x, int y);
-void coordGenerator (int *options_coords);
+static void checkGridLimitOverflow (int *x, int *y);
+static int verifySelectedOptionCoords (int *options_coords, int x, int y);
+static void coordGenerator (int *options_coords);
 
 int initializeSelection (int requested_option_list) {
     int error_code = 0;
@@ -123,7 +123,7 @@ int initializeSelection (int requested_option_list) {
     return selected_option;
 }
 
-void getSettings (int list_choice) {
+static void getSettings (int list_choice) {
     FILE *file;
 
     switch(list_choice){
@@ -157,7 +157,7 @@ void getSettings (int list_choice) {
     //---
 }
 
-int printOptionsStrings (char **options_strings, int selected_option) {
+static int printOptionsStrings (char **options_strings, int selected_option) {
     int error_code;
     printf("\x1b[%d;%dH", 0, 0);
     printf("%s", ERASE_FROM_CURSOR_TO_ENDSCREEN);
@@ -184,7 +184,7 @@ int printOptionsStrings (char **options_strings, int selected_option) {
     return 0;
 }
 
-int getStrings (char **options_strings) {
+static int getStrings (char **options_strings) {
     int i = 0;
     FILE *file;
     char string[settings.max_line_length];
@@ -216,7 +216,7 @@ int getStrings (char **options_strings) {
     return 0;
 }
 
-void printOnOnlyColumnsGrid (char **options_strings, int selected_option) {
+static void printOnOnlyColumnsGrid (char **options_strings, int selected_option) {
     int j;
 
     for(j=0; j<settings.max_columns; j++){
@@ -231,7 +231,7 @@ void printOnOnlyColumnsGrid (char **options_strings, int selected_option) {
     }
 }
 
-void printOnOnlyRowsGrid (char **options_strings, int selected_option) {
+static void printOnOnlyRowsGrid (char **options_strings, int selected_option) {
     int j;
 
     for(j=0; j<settings.max_rows; j++){
@@ -246,7 +246,7 @@ void printOnOnlyRowsGrid (char **options_strings, int selected_option) {
     }
 }
 
-void printOnGrid (char **options_strings, int selected_option) {
+static void printOnGrid (char **options_strings, int selected_option) {
     int i;
     int j;
     int current_option = 0;
@@ -270,7 +270,7 @@ void printOnGrid (char **options_strings, int selected_option) {
     }
 }
 
-void checkGridLimitOverflow (int *x, int *y) {
+static void checkGridLimitOverflow (int *x, int *y) {
     if(settings.use_columns == TRUE && settings.use_rows == TRUE){
         if((*x < 0 && *y == 0) || (*x == 0 && *y < 0)) {*x = settings.max_columns-1; *y = settings.max_rows-1;}
         if(*y < 0 && *x != 0) {(*x)--; *y = 0;}
@@ -296,7 +296,7 @@ void checkGridLimitOverflow (int *x, int *y) {
     }
 }
 
-int verifySelectedOptionCoords(int *options_coords, int x, int y){
+static int verifySelectedOptionCoords(int *options_coords, int x, int y){
     int selected_option;
     int converted_y;
     int converted_x;
@@ -317,7 +317,7 @@ int verifySelectedOptionCoords(int *options_coords, int x, int y){
     return -4;
 }
 
-void coordGenerator(int *options_coords){
+static void coordGenerator(int *options_coords){
     int x = 0, y = 0, option = 0;
 
     for (y = 0; y < settings.max_rows; y++) {
