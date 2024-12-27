@@ -1,13 +1,25 @@
 #ifndef SELECTION_H
 #define SELECTION_H
-    int initializeSelection (int requested_option_list);
-    void getSettings (int list_choice);
-    int getStrings (char **options_strings);
-    int printOptionsStrings (char **options_strings, int selected_option);
-    void printOnOnlyColumnsGrid (char **options_strings, int selected_option);
-    void printOnOnlyRowsGrid (char **options_strings, int selected_option);
-    void printOnGrid (char **options_strings, int selected_option);
-    void checkGridLimitOverflow (int *x, int *y);
-    int verifySelectedOptionCoords (int *options_coords, int x, int y);
-    void coordGenerator (int *options_coords);
+    typedef struct {
+        int use_columns;
+        int use_rows;
+        int max_options;
+        int max_columns;
+        int max_rows;
+        int max_line_length;
+
+        //percorso dei file di impostazioni
+        char strings_filename[200];
+    } Settings;
+
+    int initializeSelection (Settings settings);
+    //void checkSettings (Settings settings);
+    int printOptionsStrings (Settings settings, char **options_strings, int selected_option);
+    int getStrings (Settings settings, char **options_strings);
+    void printOnOnlyColumnsGrid (Settings settings, char **options_strings, int selected_option);
+    void printOnOnlyRowsGrid (Settings settings, char **options_strings, int selected_option);
+    void printOnGrid (Settings settings, char **options_strings, int selected_option);
+    void checkGridLimitOverflow (Settings settings, int *x, int *y);
+    int verifySelectedOptionCoords (Settings settings, int *options_coords, int x, int y);
+    void coordGenerator (Settings settings, int *options_coords);
 #endif

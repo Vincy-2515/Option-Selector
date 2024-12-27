@@ -1,6 +1,0 @@
-use_columns: 1
-use_rows: 1
-max_options: 9
-max_columns: 3
-max_rows: 3
-max_line_length: 20
