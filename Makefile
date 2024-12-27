@@ -3,9 +3,10 @@ CFLAGS = -g -pedantic -Wall -Wextra -Werror -fdiagnostics-color=always
 
 MAIN_FILE = main.c
 SELECTION_FILES = src/selection.h src/selection.c
+SELECTION_ERROR_MANAGEMENT_FILES = src/selection_error_management.h src/selection_error_management.c
 RESOURCE_FILES = src/resources/resource.rc src/resources/resource.h
 
-OBJECTS = main.o selection.o resource.res
+OBJECTS = main.o selection.o selection_error_management.o resource.res
 
 SEPARATOR = @echo -----------------
 .PHONY = clean_obj clean_all build_clean
@@ -25,7 +26,7 @@ clean_obj:
 	$(SEPARATOR)
 
 build: $(OBJECTS)
-	$(CC) $(CFLAGS) $(OBJECTS) -o option_selector.exe
+	$(CC) $(CFLAGS) $(OBJECTS) -o Option-Selector.exe
 	@echo [INFO]: file eseguibile creato con successo
 	$(SEPARATOR)
 
@@ -37,6 +38,11 @@ main.o: $(MAIN_FILE)
 selection.o: $(SELECTION_FILES)
 	$(CC) $(CFLAGS) -c $(SELECTION_FILES)
 	@echo [INFO]: compilati: $(SELECTION_FILES)
+	$(SEPARATOR)
+
+selection_error_management.o: $(SELECTION_ERROR_MANAGEMENT_FILES)
+	$(CC) $(CFLAGS) -c $(SELECTION_ERROR_MANAGEMENT_FILES)
+	@echo [INFO]: compilati: $(SELECTION_ERROR_MANAGEMENT_FILES)
 	$(SEPARATOR)
 
 resource.res: $(RESOURCE_FILES)

@@ -13,8 +13,10 @@
 #define KEY_D 'd'
 #define ENTER '\r'
 
-//ESCAPE CODES:
+// CURSORE:
 #define ERASE_FROM_CURSOR_TO_ENDSCREEN "\x1B[0J"
+
+// COLORE DEL TESTO:
 #define INVERT_COLORS_TRUE "\x1B[7m"
 #define INVERT_COLORS_FALSE "\x1B[27m"
 
@@ -93,7 +95,7 @@ int initializeSelection (int use_columns, int use_rows, int max_options, int max
                 x++;
                 break;
             default:
-                return -6; //#####################################################
+                return -300;
         }
 
         checkGridLimitOverflow (settings, &x, &y);
@@ -140,19 +142,25 @@ static int checkSettings (Settings settings) {
     fclose(file);
     
     if (file == NULL) {
-        return -1;
+        return -404;
     }
     else if (settings.use_columns == FALSE && settings.use_rows == FALSE ) {
-        return -2;
+        return -200;
     }
     else if (settings.max_options < 2) {
-        return -3;
+        return -201;
     }
     else if (settings.max_columns == 0 || settings.max_rows == 0) {
-        return -4;
+        return -202;
     }
     else if ((settings.max_columns * settings.max_rows) < settings.max_options) {
-        return -5;
+        return -203;
+    }
+    else if ((settings.use_columns < 0 || settings.use_columns > 1) || (settings.use_rows < 0 || settings.use_rows > 1)) {
+        return -204;
+    }
+    else if((settings.use_columns == 0 && settings.max_columns > 1) || (settings.use_rows == 0 && settings.max_rows > 1)) {
+        return -205;
     }
 
     return 0;
@@ -179,7 +187,7 @@ static int printOptionsStrings (Settings settings, char **options_strings, int s
         printOnGrid(settings, options_strings, selected_option);
     }
     else {
-        return -2;
+        return -200;
     }
 
     return 0;
@@ -193,7 +201,7 @@ static int getStrings (Settings settings, char **options_strings) {
     file = fopen(settings.path, "r");
 
     if (file == NULL){
-        return -1;
+        return -404;
     }
 
     i = 0;
@@ -207,8 +215,12 @@ static int getStrings (Settings settings, char **options_strings) {
         if (i < settings.max_options) {
             strcpy(options_strings[i], string);
             i++;
-        } 
-        else {
+        }
+        else if (feof(file)) {
+            break;
+        }
+        else if (!feof(file)){
+            return -400;
             break;
         }
     }
@@ -321,7 +333,7 @@ static int verifySelectedOptionCoords(Settings settings, int *options_coords, in
         }
     }
 
-    return -7; //#####################################################
+    return -100;
 }
 
 static void coordGenerator(Settings settings, int *options_coords){
