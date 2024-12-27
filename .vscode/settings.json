@@ -5,6 +5,11 @@
             "cwd": "c:\\Users\\vince\\Desktop\\Code\\C\\option-selector",
             "binaryPath": "c:\\Users\\vince\\Desktop\\Code\\C\\option-selector\\option_selector.exe",
             "binaryArgs": []
+        },
+        {
+            "cwd": "c:\\Users\\vince\\Desktop\\Code\\C\\option-selector",
+            "binaryPath": "c:\\Users\\vince\\Desktop\\Code\\C\\option-selector\\Option-Selector.exe",
+            "binaryArgs": []
         }
     ]
 }
