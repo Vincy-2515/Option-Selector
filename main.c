@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <windows.h>
 #include <conio.h>
-#include "src/selection.h"
+#include "src/option_selector.h"
 #include "src/selection_error_management.h"
 
 #define ERASE_SCREEN "\x1b[2J"

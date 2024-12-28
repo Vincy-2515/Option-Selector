@@ -1,5 +1,5 @@
-#ifndef SELECTION_H
-    #define SELECTION_H
+#ifndef OPTION_SELECTOR_H
+    #define OPTION_SELECTOR_H
     typedef struct {
         int use_columns;
         int use_rows;
