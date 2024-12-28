@@ -2,11 +2,11 @@ CC = gcc
 CFLAGS = -g -pedantic -Wall -Wextra -Werror -fdiagnostics-color=always
 
 MAIN_FILE = main.c
-SELECTION_FILES = src/selection.h src/selection.c
+SELECTION_FILES = src/option_selector.h src/option_selector.c
 SELECTION_ERROR_MANAGEMENT_FILES = src/selection_error_management.h src/selection_error_management.c
 RESOURCE_FILES = src/resources/resource.rc src/resources/resource.h
 
-OBJECTS = main.o selection.o selection_error_management.o resource.res
+OBJECTS = main.o option_selector.o selection_error_management.o resource.res
 
 SEPARATOR = @echo -----------------
 .PHONY = clean_obj clean_all build_clean
@@ -35,7 +35,7 @@ main.o: $(MAIN_FILE)
 	@echo [INFO]: compilato: $(MAIN_FILE)
 	$(SEPARATOR)
 
-selection.o: $(SELECTION_FILES)
+option_selector.o: $(SELECTION_FILES)
 	$(CC) $(CFLAGS) -c $(SELECTION_FILES)
 	@echo [INFO]: compilati: $(SELECTION_FILES)
 	$(SEPARATOR)

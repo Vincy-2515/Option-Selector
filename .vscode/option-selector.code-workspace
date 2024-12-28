@@ -16,6 +16,14 @@
 			"accctrl.h": "c",
 			"cdoexerr.h": "c",
 			"mdbrole.hxx": "c"
-		}
+		},
+		"makefile.makePath": "C:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+		"makefile.launchConfigurations": [
+			{
+				"cwd": "c:\\Users\\vince\\Desktop\\Code\\C\\option-selector",
+				"binaryPath": "c:\\Users\\vince\\Desktop\\Code\\C\\option-selector\\Option-Selector.exe",
+				"binaryArgs": []
+			}
+		]
 	}
 }
