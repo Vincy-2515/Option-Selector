@@ -1,3 +1,10 @@
+/**
+ * @author Vincy-2515
+ * @version v1.0.0.0
+ * 
+ * @note The download and other info can be found on Github
+ * @link https://github.com/Vincy-2515
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
@@ -43,6 +50,19 @@ static void checkGridLimitOverflow (Settings settings, int *p_x, int *p_y);
 static int verifySelectedOptionCoords (Settings settings, int *options_coords, int x, int y);
 static void coordGenerator (Settings settings, int *options_coords);
 
+/**
+ * @brief Funzione principale del file, prende in input le impostazioni per la selezione
+ * 
+ * @param use_columns Accetta 0 o 1 e permette di scegliere l'uso di colonne nella griglia delle opzioni
+ * @param use_rows Accetta 0 o 1 e permette di scegliere l'uso di righe nella griglia delle opzioni
+ * @param max_options Accetta valori >= 2 e indica il numero di opzioni che comporrà la griglia
+ * @param max_columns Accetta valori > 0 e permette la scelta del numero di colonne che comporranno la griglia
+ * @param max_rows Accetta valori > 0 e permette la scelta del numero di righe che comporranno la griglia
+ * @param max_option_string_length Accetta valori maggiori di 3 e indica lo spazio massimo occupato dalle stringhe delle opzioni
+ * @param path Indica il percorso di destinazione del file che conterrà le stringhe delle opzioni
+ * 
+ * @returns Il valore dell'opzione selezionata, mentre in caso di errore di qualsiasi tipo ne ritorna il codice.
+ */
 int initializeSelection (int use_columns, int use_rows, int max_options, int max_columns, int max_rows, int max_option_string_length, char *path) {
     int error_code = 0;
     char key_input;
@@ -51,7 +71,7 @@ int initializeSelection (int use_columns, int use_rows, int max_options, int max
     int y = 0;
     int selected_option = 0;
     char **options_strings;
-    int *options_coords;
+    int *options_coords; //options_coords[n] = yyyxxx
 
     Settings settings;
     setSettings(&settings, use_columns, use_rows, max_options, max_columns, max_rows, max_option_string_length, path);
@@ -150,7 +170,7 @@ static int checkSettings (Settings settings) {
     else if (settings.max_options < 2) {
         return -201;
     }
-    else if (settings.max_columns == 0 || settings.max_rows == 0) {
+    else if (settings.max_columns <= 0 || settings.max_rows <= 0) {
         return -202;
     }
     else if ((settings.max_columns * settings.max_rows) < settings.max_options) {
@@ -161,6 +181,9 @@ static int checkSettings (Settings settings) {
     }
     else if((settings.use_columns == 0 && settings.max_columns > 1) || (settings.use_rows == 0 && settings.max_rows > 1)) {
         return -205;
+    }
+    else if(settings.max_option_string_length < 3) {
+        return -206;
     }
 
     return 0;
@@ -316,7 +339,7 @@ static void checkGridLimitOverflow (Settings settings, int *p_x, int *p_y) {
 }
 
 static int verifySelectedOptionCoords(Settings settings, int *options_coords, int x, int y){
-    int selected_option;
+    int option;
     int converted_y;
     int converted_x;
     int cursor_position;
@@ -327,9 +350,9 @@ static int verifySelectedOptionCoords(Settings settings, int *options_coords, in
     converted_x = x*1;
     cursor_position = converted_x + converted_y;
 
-    for(selected_option=0; selected_option < settings.max_options; selected_option++){
-        if (cursor_position == options_coords[selected_option]) {
-            return selected_option;
+    for(option=0; option < settings.max_options; option++){
+        if (cursor_position == options_coords[option]) {
+            return option;
         }
     }
 
@@ -342,7 +365,6 @@ static void coordGenerator(Settings settings, int *options_coords){
     for (y = 0; y < settings.max_rows; y++) {
 
         for (x = 0; x < settings.max_columns; x++) {
-            // options_coords[n] = yyyxxx
             options_coords[option] = x + y*1000;
             option++;
         }
