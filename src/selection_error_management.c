@@ -26,6 +26,24 @@ int checkOption(int error_code){
 }
 
 void printError(int error_code){
+    printf ("%s", TEXT_COLOR_RED);
+    
+    if (error_code <= -100 && error_code > -200) {
+        printf("[ERRORE][COORDINATE]: ");
+    }
+    else if (error_code <= -200 && error_code > -300) {
+        printf("[ERRORE][IMPOSTAZIONI]: ");
+    }
+    else if (error_code <= -300 && error_code > -400) {
+        printf("[ERRORE][INPUT]: ");
+    }
+    else if (error_code <= -400 && error_code > -500 ) {
+        printf("[ERRORE][FILE]: ");
+    }
+    else {
+        printf("[ERRORE]: ");
+    }
+
     /*
      * codice errore = da -100 a -199: problemi generici
      * codice errore = da -200 a -299: problemi relativi alle impostazioni
@@ -36,37 +54,40 @@ void printError(int error_code){
     switch (error_code){
 
     case -404:
-        printf("%s[ERRORE]: file delle stringhe delle opzioni inesistente o percorso incorretto", TEXT_COLOR_RED);
+        printf("file delle stringhe delle opzioni inesistente o percorso incorretto");
         break;
     case -400:
-        printf("%s[ERRORE]: file delle stringhe delle opzioni non terminato, rivedere il numero massimo di opzioni assegnate", TEXT_COLOR_RED);
+        printf("file delle stringhe delle opzioni non terminato, rivedere il numero massimo di opzioni assegnate");
         break;
     case -200:
-        printf("%s[ERRORE]: almeno una tra le opzioni righe/colonne deve essere attiva", TEXT_COLOR_RED);
+        printf("almeno una tra le opzioni righe/colonne deve essere attiva");
         break;
     case -201:
-        printf("%s[ERRORE]: devono essere possibili almeno 2 opzioni", TEXT_COLOR_RED);
+        printf("devono essere possibili almeno 2 opzioni");
         break;
     case -202:
-        printf("%s[ERRORE]: deve essere presente almeno una riga/colonna e piu' di una colonna/riga", TEXT_COLOR_RED);
+        printf("deve essere presente almeno una riga/colonna e piu' di una colonna/riga");
         break;
     case -203:
-        printf("%s[ERRORE]: numero di righe/colonne insufficienti per contenere le opzioni", TEXT_COLOR_RED);
+        printf("numero di righe/colonne insufficienti per contenere le opzioni");
         break;
     case -204:
-        printf("%s[ERRORE]: valori di 'use_columns'/'use_rows' errati, accattati solo 1/0 (true/false)", TEXT_COLOR_RED);
+        printf("valori di 'use_columns'/'use_rows' errati, accattati solo 1/0 (true/false)");
         break;
     case -205:
-        printf("%s[ERRORE]: 'use_columns'/'use_rows' disattivato, quindi il numero di esso non puo' essere maggiore di 1 ", TEXT_COLOR_RED);
+        printf("'use_columns'/'use_rows' disattivato, quindi il numero di esso non puo' essere maggiore di 1");
+        break;
+    case -206:
+        printf("lunghezza massima delle stringhe delle opzioni insufficente");
         break;
     case -300:
-        printf("%s[ERRORE]: tasto premuto non valido", TEXT_COLOR_RED);
+        printf("tasto premuto non valido");
         break;
     case -100:
-        printf("%s[ERRORE]: coordinate non valide", TEXT_COLOR_RED);
+        printf("coordinate non valide");
         break;
     default:
-        printf("%s[ERRORE]: non definito", TEXT_COLOR_RED);
+        printf("non definito");
         break;
     }
 
