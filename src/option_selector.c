@@ -2,7 +2,7 @@
  * @author Vincy-2515
  * @version v1.0.0.0
  * 
- * @note The download and other info can be found on Github
+ * @note The download and other info can be found on Github (soon)
  * @link https://github.com/Vincy-2515
  */
 #include <stdio.h>
@@ -206,7 +206,7 @@ static int checkSettings (Settings settings) {
         if (temporary > settings.max_columns-2) return -210;
     }
 
-    return 0; /** ||@exception|| nessun errore */
+    return 0; /** ||@exception|| nessun errore ##################################################################################################### */
 }
 
 static int printOptionsStrings (Settings settings, char **options_strings, int selected_option) {
