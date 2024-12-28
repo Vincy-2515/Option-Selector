@@ -52,43 +52,54 @@ void printError(int error_code){
      * codice errore = da -500 in poi: errori imprevisti
      */
     switch (error_code){
-
-    case -404:
-        printf("file delle stringhe delle opzioni inesistente o percorso incorretto");
-        break;
-    case -400:
-        printf("file delle stringhe delle opzioni non terminato, rivedere il numero massimo di opzioni assegnate");
-        break;
-    case -200:
-        printf("almeno una tra le opzioni righe/colonne deve essere attiva");
-        break;
-    case -201:
-        printf("devono essere possibili almeno 2 opzioni");
-        break;
-    case -202:
-        printf("deve essere presente almeno una riga/colonna e piu' di una colonna/riga");
-        break;
-    case -203:
-        printf("numero di righe/colonne insufficienti per contenere le opzioni");
-        break;
-    case -204:
-        printf("valori di 'use_columns'/'use_rows' errati, accattati solo 1/0 (true/false)");
-        break;
-    case -205:
-        printf("'use_columns'/'use_rows' disattivato, quindi il numero di esso non puo' essere maggiore di 1");
-        break;
-    case -206:
-        printf("lunghezza massima delle stringhe delle opzioni insufficente");
-        break;
-    case -300:
-        printf("tasto premuto non valido");
-        break;
-    case -100:
-        printf("coordinate non valide");
-        break;
-    default:
-        printf("non definito");
-        break;
+        case -100:
+            printf("confronto delle coordinate non riuscito");
+            break;
+        case -200:
+            printf("almeno una tra le opzioni 'use_rows'/'use_columns' deve essere attiva");
+            break;
+        case -201:
+            printf("devono essere possibili almeno 2 opzioni");
+            break;
+        case -202:
+            printf("deve essere presente almeno una riga/colonna e piu' di una colonna/riga");
+            break;
+        case -203:
+            printf("('max_columns' * 'max_rows') < 'max_options': impossibile contenere tutte le opzioni");
+            break;
+        case -204:
+            printf("valori di 'use_columns'/'use_rows' errati, accattati solo 1/0 (true/false)");
+            break;
+        case -205:
+            printf("'use_columns'/'use_rows' disattivato, quindi il numero di esso non puo' essere maggiore di 1");
+            break;
+        case -206:
+            printf("valore di 'max_option_string_length' insufficente, deve essere almeno 3 per una stringa di un carattere");
+            break;
+        case -207:
+            printf("'max_columns'>'max_options' numero di colonne maggiore delle opzioni da contenere");
+            break;
+        case -208:
+            printf("'max_rows'>'max_options' numero di righe maggiore delle opzioni da contenere");
+            break;
+        case -209:
+            printf("'use_columns'/'use_rows' attivato quindi il valore di esso deve essere maggiore di 1");
+            break;
+        case -210:
+            printf("troppe righe e/o colonne per contenere un numero di opzioni decisamente inferiore");
+            break;
+        case -300:
+            printf("tasto premuto non valido");
+            break;
+        case -400:
+            printf("file delle stringhe delle opzioni non terminato, rivedere i valori assegnati a 'max_options'/'max_option_string_length'");
+            break;
+        case -404:
+            printf("file delle stringhe delle opzioni inesistente o percorso incorretto");
+            break;
+        default:
+            printf("non definito");
+            break;
     }
 
     printf(" (codice errore: %d)%s", error_code, TEXT_COLOR_RESET);

@@ -18,7 +18,7 @@
     void printOnOnlyColumnsGrid (Settings settings, char **options_strings, int selected_option);
     void printOnOnlyRowsGrid (Settings settings, char **options_strings, int selected_option);
     void printOnGrid (Settings settings, char **options_strings, int selected_option);
-    void checkGridLimitOverflow (Settings settings, int *p_x, int *p_y);
+    void checkGridLimitOverflow (Settings settings, int *p_x, int *p_y, char last_input);
     int verifySelectedOptionCoords (Settings settings, int *options_coords, int x, int y);
     void coordGenerator (Settings settings, int *options_coords);
 #endif
