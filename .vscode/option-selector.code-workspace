@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"stdio.h": "c",
+			"stdlib.h": "c",
+			"windows.h": "c",
+			"string.h": "c",
+			"conio.h": "c",
+			"selection.h": "c",
+			"corecrt_stdio_config.h": "c",
+			"accctrl.h": "c",
+			"cdoexerr.h": "c",
+			"mdbrole.hxx": "c"
+		}
+	}
+}
