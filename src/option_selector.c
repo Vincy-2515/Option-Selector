@@ -222,7 +222,7 @@ static int checkSettings (Settings settings) {
         return -211;
     }
 
-    return 0; /** ||@exception|| nessun errore ##################################################################################################### */
+    return 0;
 }
 
 static int printOptionsStrings (Settings settings, char **options_strings, int selected_option) {
