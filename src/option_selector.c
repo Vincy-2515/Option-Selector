@@ -48,7 +48,7 @@ typedef struct Settings{
 } Settings;
 
 int initializeSelection (int use_columns, int use_rows, int max_options, int max_columns, int max_rows, int max_option_string_length, char *path);
-static void setSettings (Settings *p_settings,int use_columns, int use_rows, int max_options, int max_columns, int max_rows, int max_option_string_length, char *path);
+static void setSettings (Settings *p_settings, int use_columns, int use_rows, int max_options, int max_columns, int max_rows, int max_option_string_length, char *path);
 static int checkSettings (Settings settings);
 static int printOptionsStrings (Settings settings, char **options_strings, int selected_option);
 static int getStrings (Settings settings, char **options_strings);
