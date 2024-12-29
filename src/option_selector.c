@@ -142,6 +142,7 @@ int initializeSelection (int use_columns, int use_rows, int max_options, int max
         selected_option = verifySelectedOptionCoords(settings, options_coords, x, y);
         if (selected_option < 0) {
             error_code = selected_option;
+            break;
         }
 
     }while(key_input != ENTER);
