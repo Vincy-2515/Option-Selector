@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <conio.h>
 
 #define ERASE_SCREEN "\x1b[2J"
 
@@ -108,5 +109,5 @@ void printError(int error_code){
     printf(" (codice errore: %d)%s", error_code, TEXT_COLOR_RESET);
 
     printf("\n\n-- PREMERE [INVIO] PER PROSEGUIRE --");
-    getchar();
+    while(_getch() != '\r') continue;
 }

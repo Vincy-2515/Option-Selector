@@ -42,7 +42,7 @@ int main(){
     printf("\n >> seconda selezione: %d", option2);
 
     printf("\n\n-- PREMERE UN TASTO PER CHIUDERE --");
-    getch();
+    _getch();
 
     printf("%s", ERASE_SCREEN);
     printf("%s", TEXT_COLOR_RESET);
