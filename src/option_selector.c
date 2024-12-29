@@ -163,6 +163,9 @@ int initializeSelection (int use_columns, int use_rows, int max_options, int max
         error_code = selected_option;
     }
 
+    printf("\x1b[%d;%dH", settings.start_y, settings.start_x);
+    printf("%s", ERASE_FROM_CURSOR_TO_ENDSCREEN);
+
     return error_code;
 }
 
