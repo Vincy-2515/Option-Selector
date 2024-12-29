@@ -26,7 +26,7 @@ int main(){
     char path_1[] = "src/resources/options_strings/selection_one.txt";
     char path_2[] = "src/resources/options_strings/selection_two.txt";
 
-    option1 = initializeSelection(1, 1, 8, 4, 2, 12, path_1);
+    option1 = initializeSelection(1, 1, 8, 2, 4, 12, path_1);
     return_value = checkOption(option1);
 
     option2 = initializeSelection(1, 0, 2, 2, 1, 12, path_2);

@@ -27,7 +27,16 @@
 #define INVERT_COLORS_TRUE "\x1B[7m"
 #define INVERT_COLORS_FALSE "\x1B[27m"
 
-//IMPOSTAZIONI (modificabili solo da "setSettings()"):
+// PERSONALIZZAZIONE:
+#define START_Y 0
+#define START_X 30
+
+#define SPACE_BEFORE_OPTIONS "    "
+
+#define SELECTED_OPTION_INDICATOR ">>"
+#define UNSELECTED_OPTION_INDICATOR "--" 
+
+// IMPOSTAZIONI (modificabili solo da "setSettings()"):
 typedef struct Settings{
     int use_columns;
     int use_rows;
@@ -46,12 +55,13 @@ static int getStrings (Settings settings, char **options_strings);
 static void printOnOnlyColumnsGrid (Settings settings, char **options_strings, int selected_option);
 static void printOnOnlyRowsGrid (Settings settings, char **options_strings, int selected_option);
 static void printOnGrid (Settings settings, char **options_strings, int selected_option);
+static void printOption (char **options_strings, int option_number, int option_type);
 static void checkGridLimitOverflow (Settings settings, int *p_x, int *p_y, char last_input);
 static int verifySelectedOptionCoords (Settings settings, int *options_coords, int x, int y);
 static void coordGenerator (Settings settings, int *options_coords);
 
 /**
- * @brief Funzione principale del file, prende in input le impostazioni per la selezione
+ * @brief Funzione principale del file, prende in input le impostazioni e avvia la selezione
  * 
  * @param use_columns Accetta 0 o 1 e permette di scegliere l'uso di colonne nella griglia delle opzioni
  * @param use_rows Accetta 0 o 1 e permette di scegliere l'uso di righe nella griglia delle opzioni
@@ -62,6 +72,8 @@ static void coordGenerator (Settings settings, int *options_coords);
  * @param path Indica il percorso di destinazione del file che conterrà le stringhe delle opzioni
  * 
  * @returns Il valore dell'opzione selezionata, mentre in caso di errore di qualsiasi tipo ne ritorna il codice.
+ * 
+ * @note IL CONTO DELLE OPZIONI COMINCIA DA ZERO
  */
 int initializeSelection (int use_columns, int use_rows, int max_options, int max_columns, int max_rows, int max_option_string_length, char *path) {
     int error_code = 0;
@@ -209,9 +221,12 @@ static int checkSettings (Settings settings) {
     return 0; /** ||@exception|| nessun errore ##################################################################################################### */
 }
 
+             
+              
+
 static int printOptionsStrings (Settings settings, char **options_strings, int selected_option) {
     int error_code;
-    printf("\x1b[%d;%dH", 0, 0);
+    printf("\x1b[%d;%dH", START_Y, START_X+1);
     printf("%s", ERASE_FROM_CURSOR_TO_ENDSCREEN);
     
     error_code = getStrings(settings, options_strings);
@@ -275,30 +290,23 @@ static int getStrings (Settings settings, char **options_strings) {
 static void printOnOnlyColumnsGrid (Settings settings, char **options_strings, int selected_option) {
     int j;
 
-    for(j=0; j<settings.max_columns; j++){
-        printf("     ");
+    for(j = 0; j < settings.max_columns; j++){
+        printf("%s", SPACE_BEFORE_OPTIONS);
 
-        if (j == selected_option) {
-            printf(">> %s%s%s", INVERT_COLORS_TRUE, options_strings[selected_option], INVERT_COLORS_FALSE);
-        }
-        else {
-            printf("-- %s", options_strings[j]);
-        }
+        if (j != selected_option) printOption(options_strings, j, 0);
+        else printOption(options_strings, selected_option, 1);
     }
 }
 
 static void printOnOnlyRowsGrid (Settings settings, char **options_strings, int selected_option) {
     int j;
 
-    for(j=0; j<settings.max_rows; j++){
-        printf("\n     ");
+    for(j = 0; j < settings.max_rows; j++){
+        printf("\x1b[%dC", START_X);
+        printf("\n%s", SPACE_BEFORE_OPTIONS);
 
-        if (j == selected_option) {
-            printf(">> %s%s%s", INVERT_COLORS_TRUE, options_strings[selected_option], INVERT_COLORS_FALSE);
-        }
-        else {
-            printf("-- %s", options_strings[j]);
-        }
+        if (j != selected_option) printOption(options_strings, j, 0);
+        else printOption(options_strings, selected_option, 1);
     }
 }
 
@@ -308,21 +316,31 @@ static void printOnGrid (Settings settings, char **options_strings, int selected
     int current_option = 0;
 
     for (i = 0; i < settings.max_rows; i++) {
+        if (i != 0) printf("\x1b[%dC", START_X);
 
         for (j = 0; j < settings.max_columns && current_option < settings.max_options; j++) {
-            printf("     ");
+            printf("%s", SPACE_BEFORE_OPTIONS);
 
-            if (current_option == selected_option) {
-                printf(">> %s%s%s", INVERT_COLORS_TRUE, options_strings[current_option], INVERT_COLORS_FALSE);
-            }
-            else {
-                printf("-- %s", options_strings[current_option]);
-            }
+            if (current_option != selected_option) printOption(options_strings, current_option, 0);
+            else printOption(options_strings, selected_option, 1);
 
             current_option++;
         }
 
         printf("\n");
+    }
+}
+
+static void printOption (char **options_strings, int option_number, int option_type) {
+    
+    if (option_type == 0) {
+        printf("%s  %s ", UNSELECTED_OPTION_INDICATOR, options_strings[option_number]);
+    }
+    else if (option_type == 1){
+        printf("%s %s %s %s", SELECTED_OPTION_INDICATOR, INVERT_COLORS_TRUE, options_strings[option_number], INVERT_COLORS_FALSE);
+    }
+    else {
+        printf("'option_type' non valido");
     }
 }
 
