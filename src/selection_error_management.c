@@ -88,6 +88,9 @@ void printError(int error_code){
         case -210:
             printf("troppe righe e/o colonne per contenere un numero di opzioni decisamente inferiore");
             break;
+        case -211:
+            printf("'start_x'/'start_y' non possono essere minori di zero");
+            break;
         case -300:
             printf("tasto premuto non valido");
             break;
