@@ -340,9 +340,6 @@ static void printOption (char **options_strings, int option_number, int option_t
     else if (option_type == 1){
         printf("%s %s %s %s", SELECTED_OPTION_INDICATOR, INVERT_COLORS_TRUE, options_strings[option_number], INVERT_COLORS_FALSE);
     }
-    else {
-        printf("'option_type' non valido");
-    }
 }
 
 static void checkGridLimitOverflow (Settings settings, int *p_x, int *p_y, char last_input) {
