@@ -28,8 +28,6 @@
 #define INVERT_COLORS_FALSE "\x1B[27m"
 
 // PERSONALIZZAZIONE:
-#define START_Y 0
-#define START_X 30
 
 #define SPACE_BEFORE_OPTIONS "    "
 
@@ -45,10 +43,12 @@ typedef struct Settings{
     int max_rows;
     int max_option_string_length;
     char *path;
+    int start_x;
+    int start_y;
 } Settings;
 
-int initializeSelection (int use_columns, int use_rows, int max_options, int max_columns, int max_rows, int max_option_string_length, char *path);
-static void setSettings (Settings *p_settings, int use_columns, int use_rows, int max_options, int max_columns, int max_rows, int max_option_string_length, char *path);
+int initializeSelection (int use_columns, int use_rows, int max_options, int max_columns, int max_rows, int max_option_string_length, char *path, int start_x, int start_y);
+static void setSettings (Settings *p_settings, int use_columns, int use_rows, int max_options, int max_columns, int max_rows, int max_option_string_length, char *path, int start_x, int start_y);
 static int checkSettings (Settings settings);
 static int printOptionsStrings (Settings settings, char **options_strings, int selected_option);
 static int getStrings (Settings settings, char **options_strings);
@@ -70,12 +70,12 @@ static void coordGenerator (Settings settings, int *options_coords);
  * @param max_rows Accetta valori > 0 e permette la scelta del numero di righe che comporranno la griglia
  * @param max_option_string_length Accetta valori maggiori di 3 e indica lo spazio massimo occupato dalle stringhe delle opzioni
  * @param path Indica il percorso di destinazione del file che conterrà le stringhe delle opzioni
+ * @param start_x Accetta valori > 0 e indica da quale colonna del terminale cominciare a stampare le opzioni
+ * @param start_y Accetta valori > 0 e indica da quale riga del terminale cominciare a stampare le opzioni
  * 
- * @returns Il valore dell'opzione selezionata, mentre in caso di errore di qualsiasi tipo ne ritorna il codice.
- * 
- * @note IL CONTO DELLE OPZIONI COMINCIA DA ZERO
+ * @returns Il valore dell'opzione selezionata (a partire da 0), mentre in caso di errore di qualsiasi tipo ne ritorna il codice
  */
-int initializeSelection (int use_columns, int use_rows, int max_options, int max_columns, int max_rows, int max_option_string_length, char *path) {
+int initializeSelection (int use_columns, int use_rows, int max_options, int max_columns, int max_rows, int max_option_string_length, char *path, int start_x, int start_y) {
     int error_code = 0;
     char key_input;
     int i = 0;
@@ -86,7 +86,7 @@ int initializeSelection (int use_columns, int use_rows, int max_options, int max
     int *options_coords; //options_coords[n] = yyyxxx
 
     Settings settings;
-    setSettings(&settings, use_columns, use_rows, max_options, max_columns, max_rows, max_option_string_length, path);
+    setSettings(&settings, use_columns, use_rows, max_options, max_columns, max_rows, max_option_string_length, path, start_x, start_y);
 
     error_code = checkSettings(settings);
     if (error_code != 0) {
@@ -158,7 +158,7 @@ int initializeSelection (int use_columns, int use_rows, int max_options, int max
     return error_code;
 }
 
-static void setSettings (Settings *p_settings, int use_columns, int use_rows, int max_options, int max_columns, int max_rows, int max_option_string_length, char *path) {
+static void setSettings (Settings *p_settings, int use_columns, int use_rows, int max_options, int max_columns, int max_rows, int max_option_string_length, char *path, int start_x, int start_y) {
     Settings settings = *p_settings;
     
     settings.use_columns = use_columns;
@@ -167,6 +167,8 @@ static void setSettings (Settings *p_settings, int use_columns, int use_rows, in
     settings.max_columns = max_columns;
     settings.max_rows = max_rows;
     settings.max_option_string_length = max_option_string_length;
+    settings.start_x = start_x;
+    settings.start_y = start_y;
     
     settings.path = malloc(strlen(path)+1);
     strcpy(settings.path, path);
@@ -217,16 +219,16 @@ static int checkSettings (Settings settings) {
         temporary = ((settings.max_columns * settings.max_rows) - settings.max_options)-1;
         if (temporary > settings.max_columns-2) return -210;
     }
+    else if (settings.start_x < 0 || settings.start_y < 0){
+        return -211;
+    }
 
     return 0; /** ||@exception|| nessun errore ##################################################################################################### */
 }
 
-             
-              
-
 static int printOptionsStrings (Settings settings, char **options_strings, int selected_option) {
     int error_code;
-    printf("\x1b[%d;%dH", START_Y, START_X+1);
+    printf("\x1b[%d;%dH", settings.start_y, settings.start_x+1);
     printf("%s", ERASE_FROM_CURSOR_TO_ENDSCREEN);
     
     error_code = getStrings(settings, options_strings);
@@ -302,7 +304,7 @@ static void printOnOnlyRowsGrid (Settings settings, char **options_strings, int 
     int j;
 
     for(j = 0; j < settings.max_rows; j++){
-        printf("\x1b[%dC", START_X);
+        printf("\x1b[%dC", settings.start_x);
         printf("\n%s", SPACE_BEFORE_OPTIONS);
 
         if (j != selected_option) printOption(options_strings, j, 0);
@@ -316,7 +318,7 @@ static void printOnGrid (Settings settings, char **options_strings, int selected
     int current_option = 0;
 
     for (i = 0; i < settings.max_rows; i++) {
-        if (i != 0) printf("\x1b[%dC", START_X);
+        if (i != 0) printf("\x1b[%dC", settings.start_x);
 
         for (j = 0; j < settings.max_columns && current_option < settings.max_options; j++) {
             printf("%s", SPACE_BEFORE_OPTIONS);

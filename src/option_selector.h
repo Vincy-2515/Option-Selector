@@ -10,8 +10,8 @@
         char *path;
     } Settings;
 
-    int initializeSelection (int use_columns, int use_rows, int max_options, int max_columns, int max_rows, int max_option_string_length, char *path);
-    void setSettings (Settings *p_settings,int use_columns, int use_rows, int max_options, int max_columns, int max_rows, int max_option_string_length, char *path);
+    int initializeSelection (int use_columns, int use_rows, int max_options, int max_columns, int max_rows, int max_option_string_length, char *path, int start_x, int start_y);
+    void setSettings (Settings *p_settings,int use_columns, int use_rows, int max_options, int max_columns, int max_rows, int max_option_string_length, char *path, int start_x, int start_y);
     int checkSettings (Settings settings);
     int printOptionsStrings (Settings settings, char **options_strings, int selected_option);
     int getStrings (Settings settings, char **options_strings);
