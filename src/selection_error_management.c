@@ -74,7 +74,7 @@ void printError(int error_code){
             printf("'use_columns'/'use_rows' disattivato, quindi il numero di esso non puo' essere maggiore di 1");
             break;
         case -206:
-            printf("valore di 'max_option_string_length' insufficente, deve essere almeno 3 per una stringa di un carattere");
+            printf("valore di 'max_option_string_length' insufficente: max_option_string_length = {lunghezza_stringa}+2");
             break;
         case -207:
             printf("'max_columns'>'max_options' numero di colonne maggiore delle opzioni da contenere");
@@ -89,7 +89,7 @@ void printError(int error_code){
             printf("troppe righe e/o colonne per contenere un numero di opzioni decisamente inferiore");
             break;
         case -211:
-            printf("'start_x'/'start_y' non possono essere minori di zero");
+            printf("'start_x'/'start_y' non puo' essere minore di zero");
             break;
         case -300:
             printf("tasto premuto non valido");

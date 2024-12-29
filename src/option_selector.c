@@ -1,9 +1,18 @@
-/**
- * @author Vincy-2515
+/*!
+ * @author  Vincy-2515
  * @version v1.0.0.0
  * 
- * @note The download and other info can be found on Github (soon)
- * @link https://github.com/Vincy-2515
+ * @brief   Questa libreria contiene tutte le funzioni che permettono la creazione
+ *          e la selezione di opzioni all'interno di una lista mostrata in una console.
+ * 
+ * @details Per permettere il funzionamento della lista delle opzioni bisogna invocare 
+ *          la funzione "initializeSelection()", fornendo correttamente i parametri 
+ *          richiesti, all'interno di un file contenente la funzione main del vostro 
+ *          programma. Il resto delle funzioni sono fini a questo stesso file, non ne è 
+ *          previsto il loro uso al di fuori.
+ * 
+ * @note    La descrizione dei codici di errore e altre informazioni possono essere 
+ *          trovate su Github a questo link: ####################################
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -59,7 +68,7 @@ static void checkGridLimitOverflow (Settings settings, int *p_x, int *p_y, char 
 static int verifySelectedOptionCoords (Settings settings, int *options_coords, int x, int y);
 static void coordGenerator (Settings settings, int *options_coords);
 
-/**
+/*!
  * @brief Funzione principale del file, prende in input le impostazioni e avvia la selezione
  * 
  * @param use_columns Accetta 0 o 1 e permette di scegliere l'uso di colonne nella griglia delle opzioni
