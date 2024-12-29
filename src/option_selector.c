@@ -189,11 +189,13 @@ static void setSettings (Settings *p_settings, int use_columns, int use_rows, in
 
 static int checkSettings (Settings settings) {
     int temporary;
+    int file_error;
     FILE *file;
-    file = fopen(settings.path, "r");
-    fclose(file);
+
+    file_error = fopen_s(&file, settings.path, "r");
+    _fcloseall();
     
-    if (file == NULL) {
+    if (file_error != 0) {
         return -404;
     }
     else if (settings.use_columns == FALSE && settings.use_rows == FALSE ) {
@@ -269,11 +271,12 @@ static int printOptionsStrings (Settings settings, char **options_strings, int s
 static int getStrings (Settings settings, char **options_strings) {
     int i = 0;
     FILE *file;
+    int file_error;
     char string[settings.max_option_string_length];
 
-    file = fopen(settings.path, "r");
+    file_error = fopen_s(&file, settings.path, "r");
 
-    if (file == NULL){
+    if (file_error != 0){
         return -404;
     }
 
@@ -298,7 +301,7 @@ static int getStrings (Settings settings, char **options_strings) {
         }
     }
 
-    fclose(file);
+    _fcloseall();
     return 0;
 }
 
