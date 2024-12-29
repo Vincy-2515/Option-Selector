@@ -236,7 +236,8 @@ static int checkSettings (Settings settings) {
 
 static int printOptionsStrings (Settings settings, char **options_strings, int selected_option) {
     int error_code;
-    printf("\x1b[%d;%dH", settings.start_y, settings.start_x+1);
+    if (settings.start_x != 0 && settings.start_y != 0) printf("\x1b[%d;%dH", settings.start_y, settings.start_x+1);
+    else printf("\x1b[%d;%dH", settings.start_y, settings.start_x+2);
     printf("%s", ERASE_FROM_CURSOR_TO_ENDSCREEN);
     
     error_code = getStrings(settings, options_strings);
