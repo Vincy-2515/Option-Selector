@@ -269,10 +269,13 @@ static int printOptionsStrings (Settings settings, char **options_strings, int s
 }
 
 static int getStrings (Settings settings, char **options_strings) {
-    int i = 0;
     FILE *file;
     int file_error;
+    int i;
     char string[settings.max_option_string_length];
+    size_t length;
+    size_t j;
+    int detected_newline = 0;
 
     file_error = fopen_s(&file, settings.path, "r");
 
@@ -282,10 +285,17 @@ static int getStrings (Settings settings, char **options_strings) {
 
     i = 0;
     while (fgets(string, settings.max_option_string_length, file) != NULL) {
-        size_t length = strlen(string);
+        length = strlen(string);
 
-        if (length > 0 && string[length - 1] == '\n') {
-            string[length - 1] = '\0';
+        for ( j = 0; j < length; j++) {
+            if(strcmp(&string[j], "\n") == 0){
+                strcpy(&string[j], "\0");
+                detected_newline = 1;
+            }
+        }
+
+        if(detected_newline != 1) {
+            return -401;
         }
 
         if (i < settings.max_options) {

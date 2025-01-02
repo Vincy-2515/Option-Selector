@@ -16,7 +16,7 @@
 #define TEXT_COLOR_YELLOW "\x1b[1;33m"
 #define TEXT_COLOR_RESET "\x1B[0;0m"
 
-int main(){
+int main( void ){
     printf("%s", CURSOR_VISIBILITY_FALSE);
     system("cls");
 
@@ -27,13 +27,15 @@ int main(){
     char path_2[] = "src/resources/options_strings/selection_two.txt";
     
     do{
-        option1 = initializeSelection(1, 1, 8, 4, 2, 12, path_1, 0, 0);
+        option1 = initializeSelection(1, 1, 8, 4, 2, 13, path_1, 0, 0);
         return_value = checkOption(option1);
+        if (option1 <= -400) break;
     } while (option1 < 0);
     
     do{
-        option2 = initializeSelection(0, 1, 2, 1, 2, 12, path_2, 0, 0);
+        option2 = initializeSelection(0, 1, 2, 1, 2, 13, path_2, 0, 0);
         return_value = checkOption(option2);
+        if (option1 <= -400) break;
     } while (option2 < 0);
     
 
