@@ -98,6 +98,9 @@ void printError(int error_code){
         case -400:
             printf("file delle stringhe delle opzioni non terminato, rivedere i valori assegnati a 'max_options'/'max_option_string_length'");
             break;
+        case -401:
+            printf("almeno una stringa di un'opzione non e' stata dichiarata in modo corretto, ricontrollare il file e le impostazioni fornite");
+            break;
         case -404:
             printf("file delle stringhe delle opzioni inesistente o percorso incorretto");
             break;
