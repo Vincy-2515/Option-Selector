@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include <conio.h>
 
-#define ERASE_SCREEN "\x1b[2J"
+#define ERASE_SCREEN "\033[2J"
 
 // CURSORE:
-#define MOVE_CUROSOR_TO_HOME "\x1b[H"
+#define MOVE_CUROSOR_TO_HOME "\033[H"
 
 // COLORE DEL TESTO
-#define TEXT_COLOR_RED "\x1B[1;31m"
-#define TEXT_COLOR_RESET "\x1B[0;0m"
+#define TEXT_COLOR_RED "\033[1;31m"
+#define TEXT_COLOR_RESET "\033[0;0m"
 
 int checkOption(int error_code);
 void printError(int error_code);
