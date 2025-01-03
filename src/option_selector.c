@@ -31,8 +31,8 @@
 #define ERASE_FROM_CURSOR_TO_ENDSCREEN "\033[0J"
 
 // CURSORE:
-#define CURSOR_VISIBILITY_TRUE ""//\033[?25h
-#define CURSOR_VISIBILITY_FALSE ""//\033[?25l
+#define CURSOR_VISIBILITY_TRUE "\033[?25h"
+#define CURSOR_VISIBILITY_FALSE "\033[?25l"
 #define MOVE_CUROSOR_TO_HOME "\033[H"
 
 // COLORE DEL TESTO:
@@ -357,7 +357,7 @@ static void printOnGrid (Settings settings, char **options_strings, int selected
 
             current_option++;
         }
-        
+
         if (i != settings.max_rows-1) printf("\n");
     }
 }
