@@ -273,7 +273,7 @@ static int getStrings (Settings settings, char **options_strings) {
     int file_error;
     int i;
     char string[settings.max_option_string_length];
-    size_t length;
+    size_t string_length;
     size_t j;
     int detected_newline = 0;
 
@@ -285,9 +285,9 @@ static int getStrings (Settings settings, char **options_strings) {
 
     i = 0;
     while (fgets(string, settings.max_option_string_length, file) != NULL) {
-        length = strlen(string);
+        string_length = strlen(string);
 
-        for ( j = 0; j < length; j++) {
+        for ( j = 0; j < string_length; j++) {
             if(strcmp(&string[j], "\n") == 0){
                 strcpy(&string[j], "\0");
                 detected_newline = 1;
