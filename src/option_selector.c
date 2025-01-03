@@ -163,8 +163,6 @@ int initializeSelection (int use_columns, int use_rows, int max_options, int max
 	printf("\033[%d;%dH", settings.start_y, settings.start_x);
 	printf("%s", ERASE_FROM_CURSOR_TO_ENDSCREEN);
 	printf("%s", CURSOR_VISIBILITY_TRUE);
-	printf("\033[1A");
-
 
 	if(selected_option >= 0) {
 		return selected_option;
