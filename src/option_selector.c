@@ -16,7 +16,6 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
-#include <windows.h>
 #include <string.h>
 #include <conio.h>
 
@@ -29,16 +28,19 @@
 #define KEY_D 'd'
 #define ENTER '\r'
 
+#define ERASE_FROM_CURSOR_TO_ENDSCREEN "\033[0J"
+
 // CURSORE:
-#define ERASE_FROM_CURSOR_TO_ENDSCREEN "\x1B[0J"
+#define CURSOR_VISIBILITY_TRUE ""//\033[?25h
+#define CURSOR_VISIBILITY_FALSE ""//\033[?25l
+#define MOVE_CUROSOR_TO_HOME "\033[H"
 
 // COLORE DEL TESTO:
-#define INVERT_COLORS_TRUE "\x1B[7m"
-#define INVERT_COLORS_FALSE "\x1B[27m"
+#define INVERT_COLORS_TRUE "\033[7m"
+#define INVERT_COLORS_FALSE "\033[27m"
 
 // PERSONALIZZAZIONE:
 #define SPACE_BEFORE_OPTIONS "    "
-
 #define SELECTED_OPTION_INDICATOR ">>"
 #define UNSELECTED_OPTION_INDICATOR "--" 
 
@@ -109,12 +111,11 @@ int initializeSelection (int use_columns, int use_rows, int max_options, int max
         options_strings[i] = malloc (sizeof(char) * settings.max_option_string_length);
     }
 
+    printf("%s", CURSOR_VISIBILITY_FALSE);
+
     do{
         error_code = printOptionsStrings(settings, options_strings, selected_option);
-        if (error_code != 0) {
-            selected_option = error_code;
-            break;
-        }
+        if (error_code != 0) break;
 
         key_input = _getch();
 
@@ -134,8 +135,11 @@ int initializeSelection (int use_columns, int use_rows, int max_options, int max
                 x++;
                 break;
             default:
-                return -300;
+                error_code = -300;
+                break;
         }
+
+        if (error_code != 0) break;
 
         checkGridLimitOverflow (settings, &x, &y, key_input);
 
@@ -155,16 +159,16 @@ int initializeSelection (int use_columns, int use_rows, int max_options, int max
     free(settings.path);
     free(options_coords);
     free(options_strings);
+
+    printf("\033[%d;%dH", settings.start_y, settings.start_x);
+    printf("%s", ERASE_FROM_CURSOR_TO_ENDSCREEN);
+    printf("%s", CURSOR_VISIBILITY_TRUE);
+    printf("\033[1A");
+
     
     if(selected_option >= 0) {
         return selected_option;
     }
-    else{
-        error_code = selected_option;
-    }
-
-    printf("\x1b[%d;%dH", settings.start_y, settings.start_x);
-    printf("%s", ERASE_FROM_CURSOR_TO_ENDSCREEN);
 
     return error_code;
 }
@@ -241,10 +245,8 @@ static int checkSettings (Settings settings) {
 
 static int printOptionsStrings (Settings settings, char **options_strings, int selected_option) {
     int error_code;
-    printf("\x1b[%d;%dH", settings.start_y, settings.start_x);
+    printf("\033[%d;%dH", settings.start_y, settings.start_x);
     printf("%s", ERASE_FROM_CURSOR_TO_ENDSCREEN);
-    if (settings.start_x != 0 && settings.start_y != 0) printf("\x1b[%d;%dH", settings.start_y, settings.start_x+1);
-    else printf("\x1b[%d;%dH", settings.start_y, settings.start_x+2);
     
     error_code = getStrings(settings, options_strings);
 
@@ -330,8 +332,9 @@ static void printOnOnlyRowsGrid (Settings settings, char **options_strings, int 
     int j;
 
     for(j = 0; j < settings.max_rows; j++){
-        printf("\x1b[%dC", settings.start_x);
-        printf("\n%s", SPACE_BEFORE_OPTIONS);
+        if (j != 0) printf("\n");
+        printf("\033[%dC", settings.start_x-1);
+        printf("%s", SPACE_BEFORE_OPTIONS);
 
         if (j != selected_option) printOption(options_strings, j, 0);
         else printOption(options_strings, selected_option, 1);
@@ -344,7 +347,7 @@ static void printOnGrid (Settings settings, char **options_strings, int selected
     int current_option = 0;
 
     for (i = 0; i < settings.max_rows; i++) {
-        if (i != 0) printf("\x1b[%dC", settings.start_x);
+        if (i != 0) printf("\033[%dC", settings.start_x-1);
 
         for (j = 0; j < settings.max_columns && current_option < settings.max_options; j++) {
             printf("%s", SPACE_BEFORE_OPTIONS);
@@ -354,8 +357,8 @@ static void printOnGrid (Settings settings, char **options_strings, int selected
 
             current_option++;
         }
-
-        printf("\n");
+        
+        if (i != settings.max_rows-1) printf("\n");
     }
 }
 
