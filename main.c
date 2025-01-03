@@ -18,14 +18,12 @@ int main( void ){
     printf("%s", ERASE_SCREEN);
 
     do{
-        printf("\033[H");
         option1 = initializeSelection(1, 1, 8, 4, 2, 13, path_1, 0, 0);
         return_value = checkOption(option1);
         if (option1 <= -400) break;
     } while (option1 < 0);
 
     do{
-        printf("\033[H");
         option2 = initializeSelection(0, 1, 2, 1, 2, 13, path_2, 0, 0);
         return_value = checkOption(option2);
         if (option1 <= -400) break;
