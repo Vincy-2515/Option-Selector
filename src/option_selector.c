@@ -28,6 +28,12 @@
 #define KEY_D 'd'
 #define ENTER '\r'
 
+// PERSONALIZZAZIONE:
+#define SPACE_BEFORE_OPTIONS "    "
+#define SELECTED_OPTION_INDICATOR ">>"
+#define UNSELECTED_OPTION_INDICATOR "--"
+
+// PUILIZIA DEL TERMINALE:
 #define ERASE_FROM_CURSOR_TO_ENDSCREEN "\033[0J"
 
 // CURSORE:
@@ -39,10 +45,24 @@
 #define INVERT_COLORS_TRUE "\033[7m"
 #define INVERT_COLORS_FALSE "\033[27m"
 
-// PERSONALIZZAZIONE:
-#define SPACE_BEFORE_OPTIONS "    "
-#define SELECTED_OPTION_INDICATOR ">>"
-#define UNSELECTED_OPTION_INDICATOR "--"
+// CODICI ERRORE:
+#define ERR_COORDS_COMPARING_UNRESOLVED -100
+#define ERR_ROWS_AND_COLUMNS_DISABLED -200
+#define ERR_TOO_FEW_OPTIONS -201
+#define ERR_TOO_FEW_ROWS_OR_COLUMNS -202
+#define ERR_GRID_TOO_SMALL -203
+#define ERR_INVALID_VALUE_OF_USECOLUMNS_OR_USEROWS -204
+#define ERR_UNEXPECTED_VALUE_OF_MAXCOLUMNS_OR_MAXROWS_USECOLUMNS_OR_USEROWS_DISABLED -205
+#define ERR_MAXOPTIONSTRINGLENGTH_TOO_SMALL -206
+#define ERR_MAXCOLUMNS_GREATER_THAN_MAXOPTIONS -207
+#define ERR_MAXROWS_GREATER_THAN_MAXOPTIONS -208
+#define ERR_ROWS_OR_COLUMNS_ENABLED_AND_NUMBER_EQUALS_TO_ONE -209
+#define ERR_GRID_TOO_BIG -210
+#define ERR_INVALID_VALUES_OF_STARTX_OR_STARTY -211
+#define ERR_INVALID_KEY_PRESSED -300
+#define ERR_FILE_NOT_FINISHED -400
+#define ERR_INVALID_STRING_DECLARATION -401
+#define ERR_FILE_OPENING -404
 
 // IMPOSTAZIONI (modificabili solo da "setSettings()"):
 typedef struct Settings{
@@ -135,7 +155,7 @@ int initializeSelection (int use_columns, int use_rows, int max_options, int max
 				x++;
 				break;
 			default:
-				error_code = -300;
+				error_code = ERR_INVALID_KEY_PRESSED;
 				break;
 		}
 
@@ -198,44 +218,44 @@ static int checkSettings (Settings settings) {
 	_fcloseall();
 
 	if (file_error != 0) {
-		return -404;
+		return ERR_FILE_OPENING;
 	}
 	else if (settings.use_columns == FALSE && settings.use_rows == FALSE ) {
-		return -200;
+		return ERR_ROWS_AND_COLUMNS_DISABLED;
 	}
 	else if (settings.max_options < 2) {
-		return -201;
+		return ERR_TOO_FEW_OPTIONS;
 	}
 	else if (settings.max_columns <= 0 || settings.max_rows <= 0) {
-		return -202;
+		return ERR_TOO_FEW_ROWS_OR_COLUMNS;
 	}
 	else if ((settings.max_columns * settings.max_rows) < settings.max_options) {
-		return -203;
+		return ERR_GRID_TOO_SMALL;
 	}
 	else if ((settings.use_columns < 0 || settings.use_columns > 1) || (settings.use_rows < 0 || settings.use_rows > 1)) {
-		return -204;
+		return ERR_INVALID_VALUE_OF_USECOLUMNS_OR_USEROWS;
 	}
 	else if((settings.use_columns == 0 && settings.max_columns > 1) || (settings.use_rows == 0 && settings.max_rows > 1)) {
-		return -205;
+		return ERR_UNEXPECTED_VALUE_OF_MAXCOLUMNS_OR_MAXROWS_USECOLUMNS_OR_USEROWS_DISABLED;
 	}
 	else if(settings.max_option_string_length < 3) {
-		return -206;
+		return ERR_MAXOPTIONSTRINGLENGTH_TOO_SMALL;
 	}
 	else if ((settings.use_columns == TRUE && settings.use_rows == FALSE) && settings.max_columns > settings.max_options) {
-		return -207;
+		return ERR_MAXCOLUMNS_GREATER_THAN_MAXOPTIONS;
 	}
 	else if ((settings.use_columns == FALSE && settings.use_rows == TRUE) && settings.max_rows > settings.max_options) {
-		return -208;
+		return ERR_MAXROWS_GREATER_THAN_MAXOPTIONS;
 	}
-	else if ((settings.use_columns == 1 && settings.max_columns <= 1 )|| (settings.use_rows == 1 && settings.max_rows <= 1)) {
-		return -209;
+	else if ((settings.use_columns == 1 && settings.max_columns <= 1 ) || (settings.use_rows == 1 && settings.max_rows <= 1)) {
+		return ERR_ROWS_OR_COLUMNS_ENABLED_AND_NUMBER_EQUALS_TO_ONE;
 	}
 	else if ((settings.max_columns * settings.max_rows) > settings.max_options) {
 		temporary = ((settings.max_columns * settings.max_rows) - settings.max_options)-1;
-		if (temporary > settings.max_columns-2) return -210;
+		if (temporary > settings.max_columns-2) return ERR_GRID_TOO_BIG;
 	}
 	else if (settings.start_x < 0 || settings.start_y < 0){
-		return -211;
+		return ERR_INVALID_VALUES_OF_STARTX_OR_STARTY;
 	}
 
 	return 0;
@@ -262,7 +282,7 @@ static int printOptionsStrings (Settings settings, char **options_strings, int s
 		printOnGrid(settings, options_strings, selected_option);
 	}
 	else {
-		return -200;
+		return ERR_ROWS_AND_COLUMNS_DISABLED;
 	}
 
 	return 0;
@@ -280,7 +300,7 @@ static int getStrings (Settings settings, char **options_strings) {
 	file_error = fopen_s(&file, settings.path, "r");
 
 	if (file_error != 0){
-		return -404;
+		return ERR_FILE_OPENING;
 	}
 
 	i = 0;
@@ -295,7 +315,7 @@ static int getStrings (Settings settings, char **options_strings) {
 		}
 
 		if(detected_newline != 1) {
-			return -401;
+			return ERR_INVALID_STRING_DECLARATION;
 		}
 
 		if (i < settings.max_options) {
@@ -306,7 +326,7 @@ static int getStrings (Settings settings, char **options_strings) {
 			break;
 		}
 		else if (!feof(file)){
-			return -400;
+			return ERR_FILE_NOT_FINISHED;
 			break;
 		}
 	}
@@ -428,7 +448,7 @@ static int verifySelectedOptionCoords(Settings settings, int *options_coords, in
 		}
 	}
 
-	return -100;
+	return ERR_COORDS_COMPARING_UNRESOLVED;
 }
 
 static void coordGenerator(Settings settings, int *options_coords){
