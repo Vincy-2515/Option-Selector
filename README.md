@@ -39,6 +39,9 @@ anche presente un robusto sistema di controllo che gestisce vari casi ed eccezzi
             Di seguito è riportato l'elenco dei parametri richiesti, e una rappresentazione sotto forma di codice
             che rispetta l'ordine dei parametri della funzione "initializeSelection()":
         </p>
+        <p align="center">
+            <img alt="parametri-impostazioni" src="src\resources\media\images\settings_parameters.png">
+        </p>
         <table>
             <tr> <th>Parametro</th> <th>Valori accettati</th> <th>Descrizione</th> </tr>
             <tr> <td><b>use_columns</b></td> <td>x = 0 o 1</td> <td>permette di scegliere l'uso di colonne nella griglia delle opzioni</td> </tr>
@@ -51,9 +54,6 @@ anche presente un robusto sistema di controllo che gestisce vari casi ed eccezzi
             <tr> <td><b>start_x</b></td> <td>x > 0</td> <td>indica da quale colonna del terminale cominciare a stampare le opzioni</td> </tr>
             <tr> <td><b>start_y</b></td> <td>x > 0</td> <td>indica da quale riga del terminale cominciare a stampare le opzioni</td> </tr>
         </table>
-        <p align="center">
-            <img alt="parametri-impostazioni" src="src\resources\media\images\settings_parameters.png">
-        </p>
     </li>
     <li>
         <h3>Altra personalizzazione</h3>
