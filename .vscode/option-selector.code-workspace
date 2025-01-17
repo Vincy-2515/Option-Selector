@@ -15,14 +15,7 @@
 			"corecrt_stdio_config.h": "c",
 			"accctrl.h": "c",
 			"cdoexerr.h": "c",
-			"mdbrole.hxx": "c",
-			"stddef.h": "c",
-			"crtdefs.h": "c",
-			"corecrt.h": "c",
-			"_mingw.h": "c",
-			"_mingw_secapi.h": "c",
-			"_mingw_mac.h": "c",
-			"selection_error_management.h": "c"
+			"mdbrole.hxx": "c"
 		},
 		"makefile.makePath": "C:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
 		"makefile.launchConfigurations": [
