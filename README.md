@@ -56,7 +56,7 @@ anche presente un robusto sistema di controllo che gestisce vari casi ed eccezzi
         </table>
     </li>
     <li>
-        <h3>Altra personalizzazione</h3>
+        <h3>Personalizzazione</h3>
         <p>
             All'interno del file <a href="src\option_selector.c">option_selector.c</a> è possibile cambiare il contenuto 
             di alcune stringhe, il che può permettere di cambiare come esse appaiono a schermo, non è ancora disponibile
