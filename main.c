@@ -28,7 +28,6 @@ int main( void ){
         return_value = checkOption(option2);
         if (option1 <= -400) break;
     } while (option2 < 0);
-    
 
     printf("OPZIONI SELEZIONATE (a partire da 0):");
     printf("\n  >> prima selezione: %d", option1);
