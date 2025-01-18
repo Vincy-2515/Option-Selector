@@ -1,5 +1,5 @@
 <p align="center">
-    <img alt = "" src = "src/resources/media/images/option_selector_readme_banner.png">
+    <img alt = "option-selector-banner" src = "src/resources/media/images/option_selector_readme_banner.png">
 </p>
 
 ---
@@ -9,29 +9,34 @@
     <span>&nbsp;&nbsp;</span>
     <img alt="versione - v1.0.0.0" src="https://img.shields.io/badge/Versione-v1.0.0.0-black?style=for-the-badge">
     <span>&nbsp;&nbsp;</span>
-    <img alt="wiki" src="https://img.shields.io/badge/-Wiki-black?style=for-the-badge&logo=wikibooks&link=linkmoltolungodasostituire##########################################################################################################">
+    <img alt="wiki" src="https://img.shields.io/badge/-Wiki-black?style=for-the-badge&logo=wikibooks&link= wiki link ### ">
 </p>
 
 
 ## Cos'è?
-E' una semplice libreria scritta in C che permette la creazione e la navigazione di una lista di opzioni in una console, 
-navigazione che avviene tramite l'uso di tasti che permettono al cursore di spostarsi tra le opzioni. 
-Permette varie opzioni di personalizzazione dalla scelta del layout della lista di opzioni, 
-al modo in cui appaiono le opzioni selezionate e non.
+<p>
+    E' una semplice libreria scritta in C che permette la creazione e la navigazione di una lista di opzioni in una console, 
+    navigazione che avviene tramite l'uso di tasti che permettono al cursore di spostarsi tra le opzioni. 
+    Permette varie opzioni di personalizzazione dalla scelta del layout della lista di opzioni, 
+    al modo in cui appaiono le opzioni selezionate e non.
+</p>
+
 <p align="center">
     <img alt="gif-risultato" src="src\resources\media\gifs\full_grid.gif"> 
 </p>
 
-
-## Come funziona?
-Le opzioni vengono stampate da sinistra verso destra e dall'alto verso il basso (comportamento non modificabile), 
-ad ogni opzione viene poi assegnata una stringa, ovvero il label dell'opzione che sarà successivamente visualizzato, 
-e delle coordinate per determinare la sua posizone in questa pseudo-griglia di opzioni, tramite la pressione dei 
-tasti predefiniti poi vengono incrementate o decrementate le variabili x e y che determinaeranno la posizione del cursore, 
-una volta premuto il tasto di conferma, verrà poi restituito il numero dell'opzione selezionata. Dietro tutto questo è 
-anche presente un robusto sistema di controllo che gestisce vari casi ed eccezzioni.
+> [!IMPORTANT]
+> In questo README sono presenti inforamzioni molto generali.
+> Per la documentazione del consultare la <a href=" wiki link ### ">wiki della repository</a>.
 
 ## Come utilizzare la libreria?
+> [!NOTE]
+> E' possibile trovare un progetto esempio, scaricabile nella versione corrente della libreria
+<p>
+    Normalmente la funzione "initializeSelection()" ritorna il numero dell'opzione selzionata, in caso d'errore invece ne ritornerà 
+    il codice. Di seguito si trovano le informazioni neccessarie per il corretto utilizzo della libreria.
+</p>
+
 <ul>
     <li>
         <h3>Impostazioni</h3>
@@ -49,7 +54,7 @@ anche presente un robusto sistema di controllo che gestisce vari casi ed eccezzi
             <tr> <td><b>max_options</b></td> <td>x >= 2</td> <td>indica il numero di opzioni che comporrà la griglia</td> </tr>
             <tr> <td><b>max_columns</b></td> <td>x > 0</td> <td>permette la scelta del numero di colonne che comporranno la griglia</td> </tr>
             <tr> <td><b>max_rows</b></td> <td>x > 0</td> <td>permette la scelta del numero di righe che comporranno la griglia</td> </tr>
-            <tr> <td><b>max_option_string_length</b></td> <td>x > 3</td> <td>indica lo spazio massimo occupato dalle stringhe delle opzioni</td> </tr>
+            <tr> <td><b>max_option_string_length</b></td> <td>x > 3</td> <td>lunghezza effetiva della stringa più lunga + 2 (<b>NECESSARIO PER IL CORRETTO FUNZIONAMENTO</b>)</td> </tr>
             <tr> <td><b>path</b></td> <td> stringa </td> <td>indica il percorso di destinazione del file che conterrà le stringhe delle opzioni</td> </tr>
             <tr> <td><b>start_x</b></td> <td>x > 0</td> <td>indica da quale colonna del terminale cominciare a stampare le opzioni</td> </tr>
             <tr> <td><b>start_y</b></td> <td>x > 0</td> <td>indica da quale riga del terminale cominciare a stampare le opzioni</td> </tr>
@@ -88,16 +93,17 @@ ilTuoProgetto
         <h3>File delle stringhe delle opzioni</h3>
         <p>
             Il file deve essere un normalissimo documento di testo e deve conternere una stringa di 
-            opzione per riga, come nell'esempio che segue:
+            opzione per riga, nell'eventualità in cui le stringhe delle opzioni siano di lunghezza
+            variabile è <b>NECESSARIO</b> l'uso di spazi per riempire lo spazio mancante rispetto
+            alla stringa più lunga, in caso contrario le opzioni risulteranno sfalsate. 
+            Nell'esempio che segue vengono aggiunti due spazi a fine stringa, per corrispondere 
+            in lunghezza con la stringa di dimensione più grande.
         </p>
 <pre>
-Opzione 01
-Opzione 02
-Opzione 03
+Prima opzione  <-- DUE SPAZII AGGIUNTIVI A FINE STRINGA
+Seconda opzione
+Terza opzione  <-- DUE SPAZII AGGIUNTIVI A FINE STRINGA
 etc...
 </pre>
     </li>
 </ul>
-
-> [!NOTE]
-> E' possibile trovare un progetto esempio, scaricabile nella versione corrente della libreria
