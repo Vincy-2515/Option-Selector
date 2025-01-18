@@ -98,7 +98,7 @@ static void coordGenerator (Settings settings, int *options_coords);
  * @param max_options Accetta valori >= 2 e indica il numero di opzioni che comporrà la griglia
  * @param max_columns Accetta valori > 0 e permette la scelta del numero di colonne che comporranno la griglia
  * @param max_rows Accetta valori > 0 e permette la scelta del numero di righe che comporranno la griglia
- * @param max_option_string_length Accetta valori maggiori di 3 e indica lo spazio massimo occupato dalle stringhe delle opzioni
+ * @param max_option_string_length Accetta valori maggiori di 3, lunghezza effetiva della stringa più lunga + 2 (NECESSARIO PER IL CORRETTO FUNZIONAMENTO)
  * @param path Indica il percorso di destinazione del file che conterrà le stringhe delle opzioni
  * @param start_x Accetta valori > 0 e indica da quale colonna del terminale cominciare a stampare le opzioni
  * @param start_y Accetta valori > 0 e indica da quale riga del terminale cominciare a stampare le opzioni
@@ -106,22 +106,21 @@ static void coordGenerator (Settings settings, int *options_coords);
  * @returns Il valore dell'opzione selezionata (a partire da 0), mentre in caso di errore di qualsiasi tipo ne ritorna il codice
  */
 int initializeSelection (int use_columns, int use_rows, int max_options, int max_columns, int max_rows, int max_option_string_length, char *path, int start_x, int start_y) {
-	int error_code = 0;
 	char key_input;
 	int i = 0;
 	int x = 0;
 	int y = 0;
-	int selected_option = 0;
+	int value = 0;
 	char **options_strings;
 	int *options_coords; //options_coords[n] = yyyxxx
 
 	Settings settings;
 	setSettings(&settings, use_columns, use_rows, max_options, max_columns, max_rows, max_option_string_length, path, start_x, start_y);
 
-	error_code = checkSettings(settings);
-	if (error_code != 0) {
+	value = checkSettings(settings);
+	if (value < 0) {
 		free(settings.path);
-		return error_code;
+		return value;
 	}
 
 	options_strings = malloc(sizeof(char*) * settings.max_options);
@@ -134,8 +133,8 @@ int initializeSelection (int use_columns, int use_rows, int max_options, int max
 	printf("%s", CURSOR_VISIBILITY_FALSE);
 
 	do{
-		error_code = printOptionsStrings(settings, options_strings, selected_option);
-		if (error_code != 0) break;
+		value = printOptionsStrings(settings, options_strings, value);
+		if (value < 0) break;
 
 		key_input = _getch();
 
@@ -155,19 +154,16 @@ int initializeSelection (int use_columns, int use_rows, int max_options, int max
 				x++;
 				break;
 			default:
-				error_code = ERR_INVALID_KEY_PRESSED;
+				value = ERR_INVALID_KEY_PRESSED;
 				break;
 		}
 
-		if (error_code != 0) break;
+		if (value < 0) break;
 
 		checkGridLimitOverflow (settings, &x, &y, key_input);
 
-		selected_option = verifySelectedOptionCoords(settings, options_coords, x, y);
-		if (selected_option < 0) {
-			error_code = selected_option;
-			break;
-		}
+		value = verifySelectedOptionCoords(settings, options_coords, x, y);
+		if (value < 0) break;
 
 	}while(key_input != ENTER);
 
@@ -184,11 +180,12 @@ int initializeSelection (int use_columns, int use_rows, int max_options, int max
 	printf("%s", ERASE_FROM_CURSOR_TO_ENDSCREEN);
 	printf("%s", CURSOR_VISIBILITY_TRUE);
 
-	if(selected_option >= 0) {
-		return selected_option;
+	if(value >= 0) {
+		value = value;
+		return value;
 	}
 
-	return error_code;
+	return value;
 }
 
 static void setSettings (Settings *p_settings, int use_columns, int use_rows, int max_options, int max_columns, int max_rows, int max_option_string_length, char *path, int start_x, int start_y) {
