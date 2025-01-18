@@ -11,8 +11,8 @@
  *          programma. Il resto delle funzioni sono fini a questo stesso file, non ne è
  *          previsto il loro uso al di fuori.
  *
- * @note    La descrizione dei codici di errore e altre informazioni possono essere
- *          trovate su Github a questo link: wiki link ###
+ * @note    La descrizione dei codici di errore e altre informazioni possono essere trovate 
+ * 			su Github a questo link: https://github.com/Vincy-2515/option-selector/wiki
  */
 #include <stdio.h>
 #include <stdlib.h>
