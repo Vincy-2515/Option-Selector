@@ -12,7 +12,7 @@
  *          previsto il loro uso al di fuori.
  *
  * @note    La descrizione dei codici di errore e altre informazioni possono essere
- *          trovate su Github a questo link: ####################################
+ *          trovate su Github a questo link: wiki link ###
  */
 #include <stdio.h>
 #include <stdlib.h>
