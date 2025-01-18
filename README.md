@@ -7,7 +7,7 @@
 <p align="center">
     <img alt="c language" src="https://img.shields.io/badge/-C-black?style=for-the-badge&logo=c">
     <span>&nbsp;&nbsp;</span>
-    <img alt="versione - v1.0.0.0" src="https://img.shields.io/badge/Versione-v1.0.0.0-black?style=for-the-badge">
+    <img alt="versione - v1.0.0.0" src="https://img.shields.io/badge/Versione-v1.0-black?style=for-the-badge">
     <span>&nbsp;&nbsp;</span>
     <img alt="wiki" src="https://img.shields.io/badge/-Wiki-black?style=for-the-badge&logo=wikibooks&link= wiki link ### ">
 </p>
