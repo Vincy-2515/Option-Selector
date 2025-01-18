@@ -1,6 +1,6 @@
 /*!
  * @author  Vincy-2515
- * @version v1.0.0.0
+ * @version v1.0
  *
  * @brief   Questa libreria contiene tutte le funzioni che permettono la creazione
  *          e la selezione di opzioni all'interno di una lista mostrata in una console.
@@ -22,6 +22,7 @@
 #define TRUE 1
 #define FALSE 0
 
+// TASTI:
 #define KEY_W 'w'
 #define KEY_A 'a'
 #define KEY_S 's'
@@ -112,7 +113,12 @@ int initializeSelection (int use_columns, int use_rows, int max_options, int max
 	int y = 0;
 	int value = 0;
 	char **options_strings;
-	int *options_coords; //options_coords[n] = yyyxxx
+
+	/**
+	 * Contenuto del vettore: options_coords[n] = yyyxxx
+	 * Dove: xxx = colonna di riferimento, yyy = riga di riferimento
+	 */
+	int *options_coords;
 
 	Settings settings;
 	setSettings(&settings, use_columns, use_rows, max_options, max_columns, max_rows, max_option_string_length, path, start_x, start_y);
