@@ -89,7 +89,7 @@ static void printOnGrid (Settings settings, char **options_strings, int selected
 static void printOption (char **options_strings, int option_number, int option_type);
 static void checkGridLimitOverflow (Settings settings, int *p_x, int *p_y, char last_input);
 static int verifySelectedOptionCoords (Settings settings, int *options_coords, int x, int y);
-static void coordGenerator (Settings settings, int *options_coords);
+static void generateOptionsCoordinates (Settings settings, int *options_coords);
 
 /*!
  * @brief Funzione principale del file, prende in input le impostazioni e avvia la selezione
@@ -354,7 +354,7 @@ static void printOnOnlyRowsGrid (Settings settings, char **options_strings, int 
 
 	for(j = 0; j < settings.max_rows; j++){
 		if (j != 0) printf("\n");
-		printf("\033[%dC", settings.start_x-1);
+		printf("\033[%dC", settings.start_x-1);// si usa "settings.start_x - 1" per evitare uno strano errore nella stampa, che fa risultare le opzioni sfalsate
 		printf("%s", SPACE_BEFORE_OPTIONS);
 
 		if (j != selected_option) printOption(options_strings, j, 0);
@@ -368,7 +368,7 @@ static void printOnGrid (Settings settings, char **options_strings, int selected
 	int current_option = 0;
 
 	for (i = 0; i < settings.max_rows; i++) {
-		if (i != 0) printf("\033[%dC", settings.start_x-1);
+		if (i != 0) printf("\033[%dC", settings.start_x-1);// si usa "settings.start_x - 1" per evitare uno strano errore nella stampa, che fa risultare le opzioni sfalsate
 
 		for (j = 0; j < settings.max_columns && current_option < settings.max_options; j++) {
 			printf("%s", SPACE_BEFORE_OPTIONS);
@@ -403,9 +403,9 @@ static void checkGridLimitOverflow (Settings settings, int *p_x, int *p_y, char 
 			last_column_of_last_row = (settings.max_options - (settings.max_columns * (settings.max_rows-1)))-1;
 
 			if((x < 0 && y == 0) || (x == 0 && y < 0)) {x = last_column_of_last_row; y = settings.max_rows-1;}
-			if(y > settings.max_rows-2 && x > last_column_of_last_row && last_input == KEY_S) {x = last_column_of_last_row; y = settings.max_rows-1;}
-			if((y > settings.max_rows-1 && x == last_column_of_last_row) && last_input == KEY_S) {x = 0; y = 0;}
-			if((y == settings.max_rows-1 && x > last_column_of_last_row) && last_input == KEY_D) {x = 0; y = 0;}
+			else if(y > settings.max_rows-2 && x > last_column_of_last_row && last_input == KEY_S) {x = last_column_of_last_row; y = settings.max_rows-1;}
+			else if((y > settings.max_rows-1 && x == last_column_of_last_row) && last_input == KEY_S) {x = 0; y = 0;}
+			else if((y == settings.max_rows-1 && x > last_column_of_last_row) && last_input == KEY_D) {x = 0; y = 0;}
 		}
 		if((x < 0 && y == 0) || (x == 0 && y < 0)) {x = settings.max_columns-1; y = settings.max_rows-1;}
 		if(y < 0 && x != 0) {x--; y = 0;}
@@ -439,11 +439,11 @@ static int verifySelectedOptionCoords(Settings settings, int *options_coords, in
 	int converted_x;
 	int cursor_position;
 
-	coordGenerator(settings, options_coords);
+	generateOptionsCoordinates(settings, options_coords);
 
 	converted_y = y*1000;
 	converted_x = x*1;
-	cursor_position = converted_x + converted_y;
+	cursor_position = converted_x + converted_y; // cursor_position = yyyxxx;
 
 	for(current_option = 0; current_option < settings.max_options; current_option++){
 		if (cursor_position == options_coords[current_option]) {
@@ -454,7 +454,7 @@ static int verifySelectedOptionCoords(Settings settings, int *options_coords, in
 	return ERR_COORDS_COMPARING_UNRESOLVED;
 }
 
-static void coordGenerator(Settings settings, int *options_coords){
+static void generateOptionsCoordinates(Settings settings, int *options_coords){
 	int x = 0, y = 0, current_option = 0;
 
 	for (y = 0; y < settings.max_rows; y++) {
