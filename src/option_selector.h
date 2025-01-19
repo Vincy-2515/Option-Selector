@@ -21,5 +21,5 @@
     void printOption (char **options_strings, int option_number, int option_type);
     void checkGridLimitOverflow (Settings settings, int *p_x, int *p_y, char last_input);
     int verifySelectedOptionCoords (Settings settings, int *options_coords, int x, int y);
-    void coordGenerator (Settings settings, int *options_coords);
+    void generateOptionsCoordinates (Settings settings, int *options_coords);
 #endif
