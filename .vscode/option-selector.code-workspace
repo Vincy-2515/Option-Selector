@@ -23,6 +23,11 @@
 				"cwd": "c:\\Users\\vince\\Desktop\\Code\\C\\option-selector",
 				"binaryPath": "c:\\Users\\vince\\Desktop\\Code\\C\\option-selector\\Option-Selector.exe",
 				"binaryArgs": []
+			},
+			{
+				"cwd": "c:\\Users\\vince\\Desktop\\Code\\C\\option_selector_project\\option-selector",
+				"binaryPath": "c:\\Users\\vince\\Desktop\\Code\\C\\option_selector_project\\option-selector\\Option-Selector.exe",
+				"binaryArgs": []
 			}
 		]
 	}
