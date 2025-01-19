@@ -9,6 +9,8 @@
     <span>&nbsp;&nbsp;</span>
     <img alt="versione - v1.0.0.0" src="https://img.shields.io/badge/Versione-v1.0-black?style=for-the-badge">
     <span>&nbsp;&nbsp;</span>
+    <img alt="Static Badge" src="https://img.shields.io/badge/windows11-tested-black?style=for-the-badge">
+    <span>&nbsp;&nbsp;</span>
     <img alt="Static Badge" src="https://img.shields.io/badge/wiki-black?style=for-the-badge&logo=wikibooks&link=https%3A%2F%2Fgithub.com%2FVincy-2515%2Foption-selector%2Fwiki">
 </p>
 
