@@ -15,7 +15,7 @@ int main( void ){
     
     printf("%s", ERASE_SCREEN);
 
-    option1 = initializeSelection(1, 1, 8, 3, 3, 13, path_1, 0, 0);
+    option1 = initializeSelection(1, 0, 8, 9, 1, 13, path_1, 0, 0);
 
     option2 = initializeSelection(0, 1, 2, 1, 2, 13, path_2, 0, 0);
 
