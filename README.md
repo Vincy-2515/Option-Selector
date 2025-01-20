@@ -28,4 +28,4 @@
 </p>
 
 > [!IMPORTANT]
-> Per la documentazione del codice e ulteriori informazioni, consultare la <a href="https://github.com/Vincy-2515/option-selector/wiki">wiki della repository</a>.
+> Per la documentazione del codice e ulteriori informazioni consultare la <a href="https://github.com/Vincy-2515/option-selector/wiki">wiki della repository</a>.
