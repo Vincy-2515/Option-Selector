@@ -55,11 +55,9 @@
 #define ERR_INVALID_VALUE_OF_USECOLUMNS_OR_USEROWS -204
 #define ERR_UNEXPECTED_VALUE_OF_MAXCOLUMNS_OR_MAXROWS_USECOLUMNS_OR_USEROWS_DISABLED -205
 #define ERR_MAXOPTIONSTRINGLENGTH_TOO_SMALL -206
-#define ERR_MAXCOLUMNS_GREATER_THAN_MAXOPTIONS -207
-#define ERR_MAXROWS_GREATER_THAN_MAXOPTIONS -208
-#define ERR_ROWS_OR_COLUMNS_ENABLED_AND_NUMBER_EQUALS_TO_ONE -209
-#define ERR_GRID_TOO_BIG -210
-#define ERR_INVALID_VALUES_OF_STARTX_OR_STARTY -211
+#define ERR_ROWS_OR_COLUMNS_ENABLED_AND_NUMBER_EQUALS_TO_ONE -207
+#define ERR_GRID_TOO_BIG -208
+#define ERR_INVALID_VALUES_OF_STARTX_OR_STARTY -209
 #define ERR_INVALID_KEY_PRESSED -300
 #define ERR_FILE_NOT_FINISHED -400
 #define ERR_INVALID_STRING_DECLARATION -401
@@ -244,18 +242,15 @@ static int checkSettings (Settings settings) {
 	else if(settings.max_option_string_length < 3) {
 		return ERR_MAXOPTIONSTRINGLENGTH_TOO_SMALL;
 	}
-	else if ((settings.use_columns == TRUE && settings.use_rows == FALSE) && settings.max_columns > settings.max_options) {
-		return ERR_MAXCOLUMNS_GREATER_THAN_MAXOPTIONS;
-	}
-	else if ((settings.use_columns == FALSE && settings.use_rows == TRUE) && settings.max_rows > settings.max_options) {
-		return ERR_MAXROWS_GREATER_THAN_MAXOPTIONS;
-	}
 	else if ((settings.use_columns == 1 && settings.max_columns <= 1 ) || (settings.use_rows == 1 && settings.max_rows <= 1)) {
 		return ERR_ROWS_OR_COLUMNS_ENABLED_AND_NUMBER_EQUALS_TO_ONE;
 	}
 	else if ((settings.max_columns * settings.max_rows) > settings.max_options) {
 		temporary = ((settings.max_columns * settings.max_rows) - settings.max_options)-1;
-		if (temporary > settings.max_columns-2) return ERR_GRID_TOO_BIG;
+		if ((temporary > settings.max_columns-2) 
+			|| (settings.use_columns == TRUE && settings.use_rows == FALSE)
+			|| (settings.use_columns == FALSE && settings.use_rows == TRUE)
+		) return ERR_GRID_TOO_BIG;
 	}
 	else if (settings.start_x < 0 || settings.start_y < 0){
 		return ERR_INVALID_VALUES_OF_STARTX_OR_STARTY;
