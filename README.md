@@ -1,5 +1,5 @@
 <p align="center">
-    <img alt = "option-selector-banner" src = "src/resources/media/images/option_selector_readme_banner.png">
+    <img alt = "option-selector-banner" src = "src/resources/media/images/option_selector_banner.png">
 </p>
 
 ---
